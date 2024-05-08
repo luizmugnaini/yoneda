@@ -1,0 +1,66 @@
+BasedOnStyle: Google
+Language: Cpp
+IncludeBlocks: Preserve
+AccessModifierOffset: -4
+IndentWidth: 4
+IndentCaseLabels: true
+NamespaceIndentation: All
+MaxEmptyLinesToKeep: 100
+
+# Single line simplification
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+
+# Strings
+BreakStringLiterals: true
+AlwaysBreakBeforeMultilineStrings: false
+
+# After open brackets
+AlignAfterOpenBracket: AlwaysBreak
+
+# Lengthy math operation
+AlignOperands: Align
+
+# Pointer should go with the type
+DerivePointerAlignment: false
+PointerAlignment: Left
+
+# Alignment insider preprocessor directives like #if
+IndentPPDirectives: AfterHash
+
+# Arguments
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+
+# Consecutive stuff alignment
+AlignConsecutiveAssignments:
+  Enabled:          true
+  AcrossEmptyLines: false
+  AcrossComments:   true
+AlignConsecutiveShortCaseStatements:
+  Enabled:          true
+  AcrossEmptyLines: true
+  AcrossComments:   true
+  AlignCaseColons:  false
+AlignConsecutiveDeclarations:
+  Enabled:          true
+  AcrossEmptyLines: false
+  AcrossComments:   true
+AlignConsecutiveBitFields:
+  Enabled:          true
+  AcrossEmptyLines: false
+  AcrossComments:   true
+AlignConsecutiveMacros:
+  Enabled:          true
+  AcrossEmptyLines: false
+  AcrossComments:   true
+
+# Comment alignment
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
