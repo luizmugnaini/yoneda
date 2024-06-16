@@ -18,6 +18,9 @@
 /// Description: Library intrinsics and defaults.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
+#include <stddef.h>
+#include <stdint.h>
+
 #define yo_internal static
 
 #if defined(__cplusplus)

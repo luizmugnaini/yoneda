@@ -26,7 +26,7 @@
 
 #define YO_MAX_LEN_MSG 8192
 
-static char const* impl_log_level_str(enum yo_log_level lvl) {
+static char const* yo_impl_log_level_str(enum yo_log_level lvl) {
     char const* s;
     switch (lvl) {
         case YO_LOG_FATAL:   s = "\x1b[1;41mFATAL\x1b[0m";
@@ -45,7 +45,7 @@ void yo_impl_log(
     (void)fprintf(
         stderr,
         "[%s][%s:%d] %s\n",
-        impl_log_level_str(lvl),
+        yo_impl_log_level_str(lvl),
         info.file,
         info.line,
         msg);
@@ -71,7 +71,7 @@ void yo_impl_log_fmt(
     (void)fprintf(
         stderr,
         "[%s][%s:%d] %s\n",
-        impl_log_level_str(lvl),
+        yo_impl_log_level_str(lvl),
         info.file,
         info.line,
         msg);
