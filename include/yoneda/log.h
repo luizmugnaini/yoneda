@@ -76,6 +76,9 @@ yo_attr_fmt(5) void yo_log_fmt(
 #    if defined(YO_DEBUG)
 #        define yo_debug(msg)            yo_log(YO_LOG_DEFAULT_STREAM, yo_source_file(), yo_source_line(), YO_LOG_LEVEL_DEBUG, msg)
 #        define yo_debug_fmt(fmt, ...)   yo_log_fmt(YO_LOG_DEFAULT_STREAM, yo_source_file(), yo_source_line(), YO_LOG_LEVEL_DEBUG, fmt, __VA_ARGS__)
+#    else
+#        define yo_debug(msg)          0
+#        define yo_debug_fmt(fmt, ...) 0
 #    endif // YO_DEBUG
 #else
 #    define yo_fatal(msg)            0
@@ -86,10 +89,8 @@ yo_attr_fmt(5) void yo_log_fmt(
 #    define yo_error_fmt(fmt, ...)   0
 #    define yo_warning_fmt(fmt, ...) 0
 #    define yo_info_fmt(fmt, ...)    0
-#    if defined(YO_DEBUG)
-#        define yo_debug(msg)            0
-#        define yo_debug_fmt(fmt, ...)   0
-#    endif // YO_DEBUG
+#    define yo_debug(msg)            0
+#    define yo_debug_fmt(fmt, ...)   0
 #endif
 // clang-format on
 
