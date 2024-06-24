@@ -15,24 +15,41 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Implementation of the code assertion utilities.
+/// Description: Types used thoughout the library.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#include "yo_assert.h"
+#ifndef YONEDA_TYPES_H
+#define YONEDA_TYPES_H
 
-#include "yo_io.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <yoneda/intrinsics.h>
 
-void yo_impl_assert(
-    struct yo_src_info info,
-    bool               expr_res,
-    char const*        expr_str,
-    char const*        msg) {
-    if (!(bool)expr_res) {
-        yo_impl_log_fmt(
-            info,
-            YO_LOG_FATAL,
-            "Assertion failed: %s, msg: %s",
-            (char const*)expr_str,
-            (char const*)msg);
-    }
-}
+/// Unsigned integer type.
+typedef uint8_t  u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+typedef u64      usize;
+
+/// Signed integer type.
+typedef int8_t  i8;
+typedef int16_t i16;
+typedef int32_t i32;
+typedef int64_t i64;
+typedef i64     isize;
+
+/// Memory-address types.
+typedef u64 uptr;
+typedef i64 iptr;
+
+/// Floating-point types.
+typedef float  f32;
+typedef double f64;
+
+/// Immutable zero-terminated string type
+///
+/// A pointer to a contiguous array of constant character values.
+typedef char const* strptr;
+
+#endif  // YONEDA_TYPES_H

@@ -15,46 +15,37 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Library intrinsics and defaults.
+/// Description: String types and their associated procedures.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#include <stddef.h>
-#include <stdint.h>
+#ifndef YO_STR_H
+#define YO_STR_H
 
-#define yo_internal static
+#include <yoneda/intrinsics.h>
+#include <yoneda/types.h>
 
-#if defined(__cplusplus)
-#    define YO_START_C_HEADER extern "C" {
-#    define YO_END_C_HEADER   }
-#else
-#    define YO_START_C_HEADER
-#    define YO_END_C_HEADER
-#endif  // __cplusplus
-
-YO_START_C_HEADER
-
-#ifndef NULL
-#    if defined(__cplusplus)
-#        define NULL 0
-#    else
-#        define NULL ((void*)0)
-#    endif
+#if defined(YO_LANG_CPP)
+extern "C" {
 #endif
 
-#define yo_likely(expr)   __builtin_expect(!!((long)((bool)(expr))), 1)
-#define yo_unlikely(expr) __builtin_expect(!!((long)((bool)(expr))), 0)
+/// String type with known size.
+struct yo_str {
+    usize  size;
+    strptr buf;
+};
 
-#define YO_DEFAULT_ALIGNMENT sizeof(void*)
+/// Create a string structure with size known at compile time from a given c-string literal.
+///
+/// Note: Use this macro with care, you should only use it with literal strings. Otherwise the
+///       length of the string won't be computed corrected by the compiler and you may obtain the
+///       size of a pointer instead the length of the string.
+#define yo_new_str(cstr_literal)                             \
+    (struct yo_str) {                                        \
+        .size = sizeof(cstr_literal), .buf = (cstr_literal), \
+    }
 
-#define yo_alignof(T) _Alignof(T)
+#if defined(YO_LANG_CPP)
+}
+#endif
 
-#define yo_stringify(x) #x
-
-#define yo_min(lhs, rhs) ((lhs < rhs) ? (lhs) : (rhs))
-#define yo_max(lhs, rhs) ((lhs > rhs) ? (lhs) : (rhs))
-
-#define yo_is_pow_of_two(n) (((n) > 0) && !((n) & ((n) - 1)))
-
-#define yo_discard(x) (void)(x)
-
-YO_END_C_HEADER
+#endif  // YO_STR_H

@@ -15,36 +15,32 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Code assertion utilities.
+/// Description: Memory handling utility functions.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#ifndef YONEDA_ASSERT_H
-#define YONEDA_ASSERT_H
+#ifndef YO_MEMUTILS_H
+#define YO_MEMUTILS_H
 
-#include <stdbool.h>
-#include <stdint.h>
-#include "yo_intrinsics.h"
-#include "yo_io.h"
+#include <yoneda/intrinsics.h>
+#include <yoneda/types.h>
 
-YO_START_C_HEADER
+#if defined(YO_LANG_CPP)
+extern "C" {
+#endif
 
-// Internal definition of the assert macros
-void yo_impl_assert(
-    struct yo_src_info info,
-    bool               expr_res,
-    char const*        expr_str,
-    char const*        msg);
+struct yo_memory {
+    usize size;
+    u8*   buf;
+};
 
-/// Assert that an expression evaluates to true.
-#define yo_assert(expr)          yo_impl_assert(YO_SRC_INFO, expr, #expr, "")
-#define yo_assert_msg(expr, msg) yo_impl_assert(YO_SRC_INFO, expr, #expr, msg)
+struct yo_memory yo_malloc(usize size);
+void             yo_free(struct yo_memory mem);
 
-/// Macro used to mark code-paths as unreachable.
-#define YO_UNREACHABLE yo_assert(false, "Code-path should be unreachable!")
+#define yo_memcpy(dst, src, size)  (u8*)memcpy(dst, src, size)
+#define yo_memset(dst, val, count) (u8*)memset(dst, val, count)
 
-/// Macro used to mark code-paths as unimplemented.
-#define YO_TODO yo_assert(false, "TODO: code-path unimplemented!")
+#if defined(YO_LANG_CPP)
+}
+#endif
 
-YO_END_C_HEADER
-
-#endif  // YONEDA_ASSERT_H
+#endif  // YO_MEMUTILS_H
