@@ -15,34 +15,22 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Memory handling utility functions.
+/// Description: Implementation of the string type procedures.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#ifndef YO_MEMUTILS_H
-#define YO_MEMUTILS_H
+#include <yoneda/str.h>
 
-#include <yoneda/intrinsics.h>
-#include <yoneda/types.h>
+#include <string.h>
+#include <yoneda/memutils.h>
 
-#if defined(YO_LANG_CPP)
-extern "C" {
-#endif
-
-struct yo_memory {
-    usize size;
-    u8*   buf;
-};
-
-struct yo_memory yo_malloc(usize size);
-void             yo_free(struct yo_memory mem);
-
-#define yo_memcpy(dst, src, size)  (u8*)memcpy(dst, src, size)
-#define yo_memset(dst, val, count) (u8*)memset(dst, val, count)
-#define yo_strlen(cstr)            ((cstr == NULL) ? 0 : strlen(cstr))
-#define yo_memeq(lhs, rhs, size)   (memcmp(lhs, rhs, size) == 0)
-
-#if defined(YO_LANG_CPP)
+struct yo_str yo_str_from(strptr cstr) {
+    return (struct yo_str){.size = yo_strlen(cstr), .buf = cstr};
 }
-#endif
 
-#endif  // YO_MEMUTILS_H
+bool yo_str_eq(struct yo_str lhs, struct yo_str rhs) {
+    return (lhs.size == rhs.size) && yo_memeq(lhs.buf, rhs.buf, lhs.size);
+}
+
+bool yo_str_eq_cstr(struct yo_str str, strptr cstr) {
+    return (str.size == yo_strlen(cstr)) && yo_memeq(str.buf, cstr, str.size);
+}

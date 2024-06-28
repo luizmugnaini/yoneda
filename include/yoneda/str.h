@@ -44,6 +44,10 @@ struct yo_str {
         .size = sizeof(cstr_literal), .buf = (cstr_literal), \
     }
 
+struct yo_str yo_str_from(strptr cstr);
+bool          yo_str_eq(struct yo_str lhs, struct yo_str rhs);
+bool          yo_str_eq_cstr(struct yo_str str, strptr cstr);
+
 #if defined(YO_LANG_CPP)
 }
 #endif
