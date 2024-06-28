@@ -28,20 +28,24 @@
 extern "C" {
 #endif
 
+/// Default maximum character count for formatted messages.
 #ifndef YO_MAX_LEN_FORMATTED_MSG
 #    define YO_MAX_LEN_FORMATTED_MSG 8192
 #endif
 
+/// All available streams for logging.
 enum yo_stream {
     YO_STREAM_ERROR,
     YO_STREAM_OUT,
     YO_STREAM_COUNT,
 };
 
+/// The default chosen stream to output logging messages.
 #ifndef YO_LOG_DEFAULT_STREAM
 #    define YO_LOG_DEFAULT_STREAM YO_STREAM_ERROR
 #endif
 
+/// Level of importance of a message.
 enum yo_log_level {
     YO_LOG_LEVEL_FATAL,
     YO_LOG_LEVEL_ERROR,

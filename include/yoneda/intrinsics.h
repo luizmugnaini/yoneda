@@ -43,6 +43,25 @@
 /// Macros for compiler detection.
 #if defined(_MSC_VER)
 #    define YO_COMPILER_MSVC
+#    if _MSC_VER >= 1920
+#        define YO_COMPILER_MSVC_YEAR 2019
+#    elif _MSC_VER >= 1910
+#        define YO_COMPILER_MSVC_YEAR 2017
+#    elif _MSC_VER >= 1900
+#        define YO_COMPILER_MSVC_YEAR 2015
+#    elif _MSC_VER >= 1800
+#        define YO_COMPILER_MSVC_YEAR 2013
+#    elif _MSC_VER >= 1700
+#        define YO_COMPILER_MSVC_YEAR 2012
+#    elif _MSC_VER >= 1600
+#        define YO_COMPILER_MSVC_YEAR 2010
+#    elif _MSC_VER >= 1500
+#        define YO_COMPILER_MSVC_YEAR 2008
+#    elif _MSC_VER >= 1400
+#        define YO_COMPILER_MSVC_YEAR 2005
+#    else
+#        define YO_COMPILER_MSVC_YEAR 0
+#    endif
 #elif defined(__clang__)
 #    define YO_COMPILER_CLANG
 #elif defined(__GNUC__)
@@ -56,6 +75,8 @@
 /// Macro for C++ detection.
 #if defined(__cplusplus)
 #    define YO_LANG_CPP
+#else
+#    define YO_LANG_C
 #endif
 
 /// Defining what NULL is, depending on the language being compiled.
@@ -127,7 +148,22 @@
 // - Miscelaneous utility macros -
 // -----------------------------------------------------------------------------
 
-/// Add or subtract an offset from a pointer if and only if the pointer is not null.
+/// Number of elements contained in a given array.
+#define yo_array_size(array_ptr) (sizeof(array_ptr) / sizeof(*array_ptr))
+
+/// Swap the value of two variables.
+#define yo_swap(type, lhs, rhs)             \
+    do {                                    \
+        type yo_swap_tmp__ = lhs;           \
+        lhs                = rhs;           \
+        rhs                = yo_swap_tmp__; \
+    } while (0)
+
+/// Get the offset of a struct member.
+#define yo_offsetof(type, member_name) ((unsigned long long)(&((type*)0)->member_name))
+
+/// Add or subtract an offset from a pointer if and only if the pointer is not
+/// null.
 #define yo_ptr_add(ptr, offset) ((ptr) == NULL ? NULL : (ptr) + (offset))
 #define yo_ptr_sub(ptr, offset) ((ptr) == NULL ? NULL : (ptr) - (offset))
 
@@ -142,7 +178,21 @@
 /// Generate a string containing the given expression.
 #define yo_stringify(x) #x
 
-#define yo_source_file() ((char const*)__builtin_FILE())
-#define yo_source_line() ((unsigned int)__builtin_LINE())
+// -----------------------------------------------------------------------------
+// - Source file information -
+// -----------------------------------------------------------------------------
+
+/// Path of the current source file.
+#define yo_source_file() ((char const*)__FILE__)
+
+/// Line number of the current source file.
+#define yo_source_line() ((unsigned int)__LINE__)
+
+/// Name of the current function being executed.
+#if defined(YO_COMPILER_MSVC) && YO_COMPILER_MSVC_YEAR < 2015
+#    define yo_source_func() "<unknown function>"
+#else
+#    define yo_source_func() ((char const*)__func__)
+#endif
 
 #endif  // YO_INTRINSICS_H

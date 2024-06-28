@@ -57,11 +57,14 @@ set out_name=yoneda.lib
 
 :: --- Compiler flags -----------------------------------------------------------
 
-set cl_common=cl /c /I %inc_dir% /nologo /std:c11 /EHsc
+set cl_common=cl /I %inc_dir% /nologo /std:c11 /EHsc
+set cl_nolink=/c
 set cl_debug=/D YO_DEBUG=1 /Z7 /Oy-
 set cl_release=/D YO_DEBUG=0 /O2
 set cl_lib=lib /NOLOGO /OUT:%out_name%
-set clang_common=clang-cl -c -I %inc_dir% /std:c11 -fcolor-diagnostics -nobuiltininc /W3 -Wuninitialized -Wswitch -Wcovered-switch-default -Wshadow -Wpedantic -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wmisleading-indentation -Wformat=2 -Wno-unused -Wno-sometimes-uninitialized
+
+set clang_common=clang-cl -I %inc_dir% /std:c11 -fcolor-diagnostics -nobuiltininc /W3 -Wuninitialized -Wswitch -Wcovered-switch-default -Wshadow -Wpedantic -Wcast-align -Wconversion -Wsign-conversion -Wnull-dereference -Wdouble-promotion -Wmisleading-indentation -Wformat=2 -Wno-unused -Wno-sometimes-uninitialized
+set clang_nolink=-c
 set clang_debug=-D YO_DEBUG=1 -g
 set clang_release=-D YO_DEBUG=0 -g -O2
 set clang_lib=llvm-ar rc %out_name%
@@ -70,12 +73,14 @@ set clang_lib=llvm-ar rc %out_name%
 
 if "%msvc%"=="1" (
    set compile_debug=%cl_common% %cl_debug%
+   set compile_nolink=%cl_nolink%
    set compile_release=%cl_common% %cl_release%
    set compile_lib=%cl_lib%
 )
 
 if "%clang%"=="1" (
    set compile_debug=%clang_common% %clang_debug%
+   set compile_nolink=%clang_nolink%
    set compile_release=%clang_common% %clang_release%
    set compile_lib=%clang_lib%
 )
@@ -92,8 +97,10 @@ if not exist build mkdir build
 :: --- Compile all --------------------------------------------------------------
 
 pushd build
-%compile% %src_files%
+%compile% %compile_nolink% %src_files%
 %compile_lib% %obj_files%
+
+%compile% ..\tests\test_memory.c /link %out_name%
 popd
 
 :: --- Unset everything ---------------------------------------------------------
