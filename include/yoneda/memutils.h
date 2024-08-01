@@ -21,8 +21,7 @@
 #ifndef YO_MEMUTILS_H
 #define YO_MEMUTILS_H
 
-#include <yoneda/intrinsics.h>
-#include <yoneda/types.h>
+#include <yoneda/core.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {
@@ -33,8 +32,8 @@ struct yo_memory {
     u8*   buf;
 };
 
-struct yo_memory yo_malloc(usize size);
-void             yo_free(struct yo_memory mem);
+struct yo_memory yo_memory_alloc(usize size);
+void             yo_memory_free(struct yo_memory mem);
 
 #define yo_memcpy(dst, src, size)  (u8*)memcpy(dst, src, size)
 #define yo_memset(dst, val, count) (u8*)memset(dst, val, count)

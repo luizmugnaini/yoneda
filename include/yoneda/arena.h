@@ -21,9 +21,8 @@
 #ifndef YONEDA_ARENA_H
 #define YONEDA_ARENA_H
 
-#include <yoneda/intrinsics.h>
+#include <yoneda/core.h>
 #include <yoneda/memutils.h>
-#include <yoneda/types.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {

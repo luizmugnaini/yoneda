@@ -15,41 +15,22 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Types used thoughout the library.
+/// Description: Single compilation unit for the whole suite of tests for the Yoneda library.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#ifndef YONEDA_TYPES_H
-#define YONEDA_TYPES_H
+// Source for the whole Yoneda library.
+#include "../src/all.c"
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <yoneda/intrinsics.h>
+// Prevent tests from defining a `main` function.
+#define YO_TEST_NO_MAIN
 
-/// Unsigned integer type.
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-typedef u64      usize;
+// -----------------------------------------------------------------------------
+// - Invoke all library tests -
+// -----------------------------------------------------------------------------
 
-/// Signed integer type.
-typedef int8_t  i8;
-typedef int16_t i16;
-typedef int32_t i32;
-typedef int64_t i64;
-typedef i64     isize;
+#include "test_memory.c"
 
-/// Memory-address types.
-typedef u64 uptr;
-typedef i64 iptr;
-
-/// Floating-point types.
-typedef float  f32;
-typedef double f64;
-
-/// Immutable zero-terminated string type
-///
-/// A pointer to a contiguous array of constant character values.
-typedef char const* strptr;
-
-#endif  // YONEDA_TYPES_H
+int main(void) {
+    test_memory();
+    return 0;
+}

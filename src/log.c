@@ -23,7 +23,7 @@
 #include <assert.h>
 #include <stdarg.h>
 #include <stdio.h>
-#include <yoneda/intrinsics.h>
+#include <yoneda/core.h>
 
 /// Formatting string common to all logging procedures.
 #define YO_LOG_FMT "%s [%s:%d] %s\n"
@@ -50,7 +50,7 @@ yo_inline yo_internal FILE* yo_impl_get_stream(enum yo_stream stream) {
     switch (stream) {
         case YO_STREAM_ERROR: handle = stderr; break;
         case YO_STREAM_OUT:   handle = stdout; break;
-        default:              assert(false && "Invalid stream.");
+        default:              yo_unreachable();
     }
     return handle;
 }

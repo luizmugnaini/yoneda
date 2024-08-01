@@ -21,9 +21,7 @@
 #ifndef YONEDA_ASSERT_H
 #define YONEDA_ASSERT_H
 
-#include <stdbool.h>
-#include <stdint.h>
-#include <yoneda/intrinsics.h>
+#include <yoneda/core.h>
 #include <yoneda/log.h>
 
 #if defined(YO_LANG_CPP)
@@ -36,7 +34,7 @@ extern "C" {
 ///
 /// Note: An assertion will always evaluate the internal expression, but will only check for its
 ///       truthness in case either YO_DEBUG or YO_ENABLE_ASSERTS are defined.
-#if defined(YO_DEBUG) || defined(YO_ENABLE_ASSERTS)
+#if defined(YO_DEBUG) || defined(YO_DISABLE_ASSERTS)
 #    define yo_assert(expr)                                                    \
         do {                                                                   \
             if (!(bool)(expr)) {                                               \
@@ -54,13 +52,7 @@ extern "C" {
 #else
 #    define yo_assert(expr)          yo_discard(expr)
 #    define yo_assert_msg(expr, msg) yo_discard(expr)
-#endif  // YO_DEBUG || YO_ENABLE_ASSERTS
-
-#define yo_unreachable()                             \
-    do {                                             \
-        yo_fatal("Codepath should be unreachable!"); \
-        yo_abort();                                  \
-    } while (0)
+#endif  // YO_DEBUG || YO_DISABLE_ASSERTS
 
 #define yo_todo()                                   \
     do {                                            \

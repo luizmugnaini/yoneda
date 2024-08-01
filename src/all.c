@@ -15,17 +15,19 @@
 ///    with this program; if not, write to the Free Software Foundation, Inc.,
 ///    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 ///
-/// Description: Implementation of the memory utility functions.
+/// Description: Single compilation unit for the whole Yoneda library.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
+// clang-format off
+#include <yoneda/core.h>
 #include <yoneda/memutils.h>
+#include <yoneda/str.h>
+#include <yoneda/log.h>
+#include <yoneda/assert.h>
+#include <yoneda/arena.h>
 
-#include <stdlib.h>
-
-struct yo_memory yo_memory_alloc(usize size) {
-    return (struct yo_memory){.size = size, .buf = (u8*)yo_malloc(size)};
-}
-
-void yo_memory_free(struct yo_memory mem) {
-    yo_free(mem.buf);
-}
+#include "memutils.c"
+#include "str.c"
+#include "log.c"
+#include "arena.c"
+// clang-format on

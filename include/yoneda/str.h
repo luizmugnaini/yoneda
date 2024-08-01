@@ -21,8 +21,7 @@
 #ifndef YO_STR_H
 #define YO_STR_H
 
-#include <yoneda/intrinsics.h>
-#include <yoneda/types.h>
+#include <yoneda/core.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {
