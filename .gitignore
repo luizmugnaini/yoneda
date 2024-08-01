@@ -3,3 +3,6 @@
 
 # remedybg session files
 *.rdbg
+
+tags
+.tags
