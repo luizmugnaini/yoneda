@@ -54,7 +54,7 @@ void yo_arena_reset(struct yo_arena* arena) {
 }
 
 u8* yo_arena_alloc_aligned(struct yo_arena* arena, usize size, u32 align) {
-    if (yo_unlikely(size == 0 || arena->size == 0)) {
+    if (yo_unlikely(size == 0 || arena == NULL || arena->size == 0)) {
         return NULL;
     }
 
