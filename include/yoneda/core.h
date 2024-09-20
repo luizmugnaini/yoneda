@@ -282,14 +282,14 @@ typedef char const* strptr;
 // -----------------------------------------------------------------------------
 
 /// Minimum/maximum mathematical functions.
-#define yo_min(lhs, rhs) (((lhs) < (rhs)) ? (lhs) : (rhs))
-#define yo_max(lhs, rhs) (((lhs) > (rhs)) ? (lhs) : (rhs))
+#define yo_min_val(lhs, rhs) (((lhs) < (rhs)) ? (lhs) : (rhs))
+#define yo_max_val(lhs, rhs) (((lhs) > (rhs)) ? (lhs) : (rhs))
+
+/// Clamp a value to an interval.
+#define yo_clamp_val(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
 
 /// Check if a value is a power of two.
 #define yo_is_pow_of_two(n) (((n) > 0) && !((n) & ((n)-1)))
-
-/// Clamp a value to an interval.
-#define yo_clamp(x, min, max) (((x) < (min)) ? (min) : (((x) > (max)) ? (max) : (x)))
 
 /// Add values and clamp to a lower bound.
 #define yo_lb_add(lhs, rhs, lb) (((lhs) + (rhs)) < (lb) ? (lb) : ((lhs) + (rhs)))
@@ -319,7 +319,7 @@ typedef char const* strptr;
 // -----------------------------------------------------------------------------
 
 /// Number of elements contained in a given array.
-#define yo_array_size(array_ptr) (sizeof(array_ptr) / sizeof(*array_ptr))
+#define yo_array_size(array) (sizeof(array) / sizeof(array[0]))
 
 /// Swap the value of two variables.
 #define yo_swap(type, lhs, rhs)             \
