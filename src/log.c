@@ -81,7 +81,7 @@ void yo_log_fmt(
         assert(char_count != -1 && "snprintf unable to parse the format string and arguments");
 
         // Stamp the message with a null-terminator character.
-        usize msg_len    = yo_min((usize)char_count, YO_MAX_LEN_FORMATTED_MSG);
+        usize msg_len    = yo_min_val((usize)char_count, YO_MAX_LEN_FORMATTED_MSG);
         msg_buf[msg_len] = 0;
     }
     va_end(args);

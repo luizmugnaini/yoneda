@@ -138,7 +138,7 @@ u8* yo_arena_realloc_aligned(
     u8* new_mem = yo_arena_alloc_aligned(arena, new_size, align);
 
     // Copy the existing data to the new block.
-    usize copy_size = yo_min(current_size, new_size);
+    usize copy_size = yo_min_val(current_size, new_size);
     yo_memcpy(new_mem, block, copy_size);
 
     return new_mem;
