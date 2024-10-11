@@ -21,7 +21,7 @@
 -- Running the build system:  lua build.lua [options]
 -- Example:                   lua build.lua fmt clang mold test
 
-local start_time = os.clock()
+local start_time = os.time()
 
 -- -----------------------------------------------------------------------------
 -- Available command line options
@@ -47,9 +47,25 @@ for i = 1, #arg do
     options[arg[i]] = true
 end
 
-local os_windows = (package.config:sub(1, 1) == "\\")
-local os_info = {}
-if os_windows then
+local os_info = {
+    windows = (package.config:sub(1, 1) == "\\"),
+    linux = false,
+    darwin = false,
+}
+
+if not os_info.windows then
+    local handle = io.popen("uname")
+    local result = handle:read("*a")
+    handle:close()
+
+    if string.match(result, "Linux") then
+        os_info.linux = true
+    elseif string.match(result, "Darwin") then
+        os_info.darwin = true
+    end
+end
+
+if os_info.windows then
     os_info.path_sep = "\\"
     os_info.silence_cmd = " > NUL 2>&1"
     os_info.obj_ext = ".obj"
@@ -64,30 +80,48 @@ else
 end
 
 function exec(cmd_str, quiet)
-    local cmd_res = (not (quiet or options.quiet)) and cmd_str or (cmd_str .. os_info.silence_cmd)
-    if not options.quiet then
-        print("\x1b[1;35mexecuting ::\x1b[0m " .. cmd_res)
+    if quiet or options.quiet then
+        os.execute(cmd_str .. os_info.silence_cmd)
+    else
+        print("\x1b[1;35mexecuting ::\x1b[0m " .. cmd_str)
+        os.execute(cmd_str)
     end
-    os.execute(cmd_res)
 end
 
 function concat(arr, join, is_prefix)
-    local acc = nil
-    if is_prefix then
-        acc = join .. arr[1]
-    else
-        acc = arr[1]
+    if #arr < 1 then
+        return ""
     end
 
+    local acc = arr[1]
     for i = 2, #arr do
         acc = acc .. join .. arr[i]
     end
+
+    if is_prefix then
+        acc = join .. acc
+    end
+
     return acc
+end
+
+local function make_path(arr)
+    return concat(arr, os_info.path_sep, false)
+end
+
+local function get_script_dir()
+    local info = debug.getinfo(1, "S").source:sub(2)
+    return info:match("(.*)[/\\]")
 end
 
 -- -----------------------------------------------------------------------------
 -- Project configuration
 -- -----------------------------------------------------------------------------
+
+local root_dir = get_script_dir()
+if not root_dir then
+    root_dir = "."
+end
 
 local compilers = {
     clang = {
@@ -98,7 +132,8 @@ local compilers = {
         opt_no_link = "-c",
         opt_out_obj = "-o",
         opt_out_exe = "-o",
-        flags_common = "-pedantic -Wall -Wextra -Wconversion -Wpedantic -Wuninitialized -Wcast-align -Wbad-function-cast -Wfloat-conversion -Wshadow -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2 "
+        flags_common = "-pedantic -Wall -Wextra -Wconversion -Wpedantic -Wuninitialized -Wcast-align -Wbad-function-cast -Wfloat-conversion -Wshadow -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2 -Wvla "
+            .. "-Werror=implicit-int -Werror=incompatible-pointer-types -Werror=int-conversion "
             .. "-Wno-unused-variable -Wno-switch-enum -Wno-unsafe-buffer-usage -Wno-declaration-after-statement",
         flags_debug = "-Werror -g -O0 -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined -fstack-protector-strong -fsanitize=leak",
         flags_release = "-O2",
@@ -114,7 +149,8 @@ local compilers = {
         opt_no_link = "-c",
         opt_out_obj = "-o",
         opt_out_exe = "-o",
-        flags_common = "-pedantic -Wall -Wextra -Wconversion -Wpedantic -Wuninitialized -Wcast-align -Wfloat-conversion -Wshadow -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2",
+        flags_common = "-pedantic -Wall -Wextra -Wconversion -Wpedantic -Wuninitialized -Wcast-align -Wfloat-conversion -Wshadow -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2  -Wvla"
+            .. "-Werror=implicit-int -Werror=incompatible-pointer-types -Werror=int-conversion ",
         flags_debug = "-Werror -g -O0 -fsanitize=address -fsanitize=pointer-compare -fsanitize=pointer-subtract -fsanitize=undefined -fstack-protector-strong -fsanitize=leak",
         flags_release = "-O2",
         ar = "ar",
@@ -145,6 +181,7 @@ local compilers = {
         opt_out_obj = "-o",
         opt_out_exe = "-o",
         flags_common = "/TC -Wall -Wextra -Wconversion -Wpedantic -Wuninitialized -Wcast-align -Wbad-function-cast -Wfloat-conversion -Wshadow -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2 "
+            .. "-Werror=implicit-int -Werror=incompatible-pointer-types -Werror=int-conversion "
             .. "-Wno-unused-variable -Wno-switch-enum -Wno-unsafe-buffer-usage -Wno-declaration-after-statement",
         flags_debug = "-Ob0 /Od /Oy- /Z7 /RTC1 -g /MTd",
         flags_release = "-O2 /MT",
@@ -155,12 +192,12 @@ local compilers = {
 }
 
 local yoneda = {
-    src = "src/all.c",
-    test_src = "tests/test_all.c",
-    include_dir = "include",
+    src = make_path({ root_dir, "src", "all.c" }),
+    test_src = make_path({ root_dir, "tests", "test_all.c" }),
+    include_dir = make_path({ root_dir, "include" }),
     defines = {},
     debug_defines = { "YO_DEBUG" },
-    lib = "libyoneda",
+    lib = os_info.windows and "yoneda" or "libyoneda",
     test_exe = "test_all",
     std = "c11",
 }
@@ -169,11 +206,11 @@ local yoneda = {
 -- Toolchain
 -- -----------------------------------------------------------------------------
 
-local tc = os_windows and compilers.msvc or compilers.gcc
+local tc = os_info.windows and compilers.msvc or compilers.gcc
 if options.clang then
-    tc = os_windows and compilers.clang_cl or compilers.clang
+    tc = os_info.windows and compilers.clang_cl or compilers.clang
 elseif options.gcc then
-    assert(not os_windows, "GCC build not supported in Windows")
+    assert(not os_info.windows, "GCC build not supported on Windows")
     tc = compilers.gcc
 elseif options.msvc then
     tc = compilers.msvc
@@ -184,35 +221,43 @@ end
 -- -----------------------------------------------------------------------------
 
 if options.fmt then
-    exec("clang-format -i include/yoneda/*.h src/*.c")
+    exec(
+        string.format(
+            "clang-format -i %s %s",
+            make_path({ root_dir, yoneda.include_dir, "*.h" }),
+            make_path({ root_dir, "src", "*.c" })
+        )
+    )
 end
 
-local out_dir = "build"
-local obj_out = out_dir .. os_info.path_sep .. yoneda.lib .. os_info.obj_ext
-local lib_out = out_dir .. os_info.path_sep .. yoneda.lib .. os_info.lib_ext
+local out_dir = make_path({ root_dir, "build" })
+local obj_out = make_path({ out_dir, yoneda.lib .. os_info.obj_ext })
+local lib_out = make_path({ out_dir, yoneda.lib .. os_info.lib_ext })
 exec("mkdir " .. out_dir, true)
 
--- Compile without linking.
-exec(
-    string.format(
-        string.rep("%s ", 9),
-        tc.cc,
-        tc.opt_no_link,
-        tc.opt_std .. yoneda.std,
-        tc.flags_common,
-        options.release and tc.flags_release or tc.flags_debug,
-        concat(yoneda.defines, " " .. tc.opt_define, true),
-        tc.opt_include .. yoneda.include_dir,
-        tc.opt_out_obj .. obj_out,
-        yoneda.src
+local function build_yoneda_lib()
+    -- Compile without linking.
+    exec(
+        string.format(
+            string.rep("%s ", 9),
+            tc.cc,
+            tc.opt_no_link,
+            tc.opt_std .. yoneda.std,
+            tc.flags_common,
+            options.release and tc.flags_release or tc.flags_debug,
+            concat(yoneda.defines, " " .. tc.opt_define, true),
+            tc.opt_include .. yoneda.include_dir,
+            tc.opt_out_obj .. obj_out,
+            yoneda.src
+        )
     )
-)
--- Archive objs into a library.
-exec(string.format("%s %s %s %s", tc.ar, tc.ar_flags, tc.ar_out .. lib_out, obj_out))
+    -- Archive objs into a library.
+    exec(string.format("%s %s %s %s", tc.ar, tc.ar_flags, tc.ar_out .. lib_out, obj_out))
+end
 
-if options.test then
-    -- Compile tests with debug flags.
-    local test_exe_out = out_dir .. os_info.path_sep .. yoneda.test_exe .. os_info.exe_ext
+local function build_yoneda_tests()
+    local test_exe_out = make_path({ out_dir, yoneda.test_exe .. os_info.exe_ext })
+    local test_obj_out = make_path({ out_dir, yoneda.test_exe .. os_info.obj_ext })
     exec(
         string.format(
             string.rep("%s ", 10),
@@ -223,13 +268,20 @@ if options.test then
             concat(yoneda.defines, " " .. tc.opt_define, true),
             concat(yoneda.debug_defines, " " .. tc.opt_define, true),
             tc.opt_include .. yoneda.include_dir,
-            tc.opt_out_obj .. out_dir .. os_info.path_sep .. yoneda.test_exe .. os_info.obj_ext,
+            tc.opt_out_obj .. test_obj_out,
             tc.opt_out_exe .. test_exe_out,
             yoneda.test_src
         )
     )
-    -- Run tests.
-    exec(test_exe_out)
+    return test_exe_out
 end
 
-print(string.format("\x1b[1;35mtime elapsed ::\x1b[0m %.5f seconds", os.clock() - start_time))
+build_yoneda_lib()
+
+if options.test then
+    local test_exe = build_yoneda_tests()
+    exec(test_exe)
+end
+
+local end_time = os.time()
+print(string.format("\x1b[1;35mtime elapsed ::\x1b[0m %.5f seconds", os.difftime(end_time, start_time)))
