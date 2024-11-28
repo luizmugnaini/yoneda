@@ -25,8 +25,7 @@
 #include <yoneda_string.h>
 
 #include <string.h>
-#include <yoneda_memory.hpp>
-#include <yoneda_option.hpp>
+#include <yoneda_memory.h>
 
 usize yo_cstring_length(cstring str) {
     usize length = 0;
@@ -36,7 +35,7 @@ usize yo_cstring_length(cstring str) {
     return length;
 }
 
-StrCmpResult yo_cstring_cmp(cstring lhs, cstring rhs) {
+yo_StrCmp yo_cstring_cmp(cstring lhs, cstring rhs) {
     i32 cmp = strcmp(lhs, rhs);
 
     yo_StrCmp result;
@@ -87,7 +86,7 @@ yo_Status yo_join_strings(
         usize additional_length = 1;
         {
             // Add the size accumulated by the join element.
-            if (join_element.count != 0) {
+            if (join_element.length != 0) {
                 additional_length += previously_empty ? ((join_strings_count - 1) * join_element.length)
                                                       : (join_strings_count * join_element.length);
             }
@@ -108,14 +107,14 @@ yo_Status yo_join_strings(
     }
 
     u8*   target_buf        = yo_cast(u8*, target->buf);
-    usize new_string_length = target->count;
-    if (join_element.count != 0) {
+    usize new_string_length = target->length;
+    if (join_element.length != 0) {
         usize first_idx = 0;
 
         // If the string was empty, join the first string without accounting for the joining element.
         if (previously_empty) {
-            StringView const* first_js        = join_strings[0];
-            usize             first_js_lenght = first_js->length;
+            yo_String const* first_js        = &join_strings[0];
+            usize            first_js_lenght = first_js->length;
 
             yo_memory_copy(target_buf + new_string_length, yo_cast(u8 const*, first_js->buf), first_js_lenght);
             new_string_length += first_js_lenght;
@@ -124,27 +123,27 @@ yo_Status yo_join_strings(
         }
 
         // Join remaining strings.
-        for (usize idx = first_idx; idx < join_strings.count; ++idx) {
-            yo_String const* js        = join_strings[idx];
+        for (usize idx = first_idx; idx < join_strings_count; ++idx) {
+            yo_String const* js        = &join_strings[idx];
             usize            js_length = js->length;
 
             usize previous_size = new_string_length;
             yo_memory_copy(target_buf + previous_size, yo_cast(u8 const*, join_element.buf), join_element.length);
-            yo_memory_copy(target_buf + previous_size + join_element.length, yo_cast(u8 const*, js.buf), js_length);
+            yo_memory_copy(target_buf + previous_size + join_element.length, yo_cast(u8 const*, js->buf), js_length);
             new_string_length += join_element.length + js_length;
         }
     } else {
         for (usize idx = 0; idx < join_strings_count; ++idx) {
-            yo_String const* js        = join_strings[idx];
+            yo_String const* js        = &join_strings[idx];
             usize            js_length = js->length;
 
-            memory_copy(target_buf + new_string_length, yo_cast(u8 const*, js.buf), js_length);
+            yo_memory_copy(target_buf + new_string_length, yo_cast(u8 const*, js->buf), js_length);
             new_string_length += js_length;
         }
     }
 
     target->buf[new_string_length] = 0;
-    target->count                  = new_string_length;
+    target->length                 = new_string_length;
 
-    return STATUS_OK;
+    return YO_STATUS_OK;
 }

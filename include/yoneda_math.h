@@ -45,16 +45,16 @@ yo_api bool yo_f32_approx_equal(f32 a, f32 b) {
     return (-YO_F32_EPSILON < sub) && (sub < YO_F32_EPSILON);
 }
 
-yo_api f32 yo_as_radians(f32 deg) {
+yo_api f32 yo_f32_as_radians(f32 deg) {
     return deg * YO_F32_PI / 180.0f;
 }
 
-yo_api u32 yo_no_wrap_sub(u32 a, u32 b) {
+yo_api u32 yo_u32_no_wrap_sub(u32 a, u32 b) {
     u32 c = a - b;
     return (c <= a) ? c : 0;
 }
 
-yo_api u64 yo_no_wrap_sub(u64 a, u64 b) {
+yo_api u64 yo_u64_no_wrap_sub(u64 a, u64 b) {
     u64 c = a - b;
     return (c <= a) ? c : 0;
 }

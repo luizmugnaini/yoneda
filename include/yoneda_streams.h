@@ -39,7 +39,7 @@ extern "C" {
 #    define YO_DEFAULT_STDIN_READ_CHUNK_SIZE 64
 #endif
 
-typedef enum yo_FileFlag {
+enum yo_FileFlag {
     /// Open a text file for reading operations.
     ///
     /// The file stream is positioned at the start of the file.
@@ -86,9 +86,10 @@ typedef enum yo_FileFlag {
     //       user may use the WRITE_EXTENDED instead.
 
     YO_FILE_FLAG_COUNT,
-} yo_FileFlag;
+};
+yo_type_alias(yo_FileFlag, enum yo_FileFlag);
 
-typedef enum yo_FileStatus {
+enum yo_FileStatus {
     YO_FILE_STATUS_NONE = 0,
     YO_FILE_STATUS_FAILED_TO_OPEN,
     YO_FILE_STATUS_FAILED_TO_CLOSE,
@@ -96,13 +97,15 @@ typedef enum yo_FileStatus {
     YO_FILE_STATUS_OUT_OF_MEMORY,
     YO_FILE_STATUS_SIZE_UNKNOWN,
     YO_FILE_STATUS_COUNT,
-} yo_FileStatus;
+};
+yo_type_alias(yo_FileStatus, enum yo_FileStatus);
 
-typedef struct yo_api yo_FileReadResult {
-    u8*   buf;
-    usize buf_size;
-    yo_FileStatus;
-} yo_FileReadResult;
+struct yo_api yo_FileReadResult {
+    u8*           buf;
+    usize         buf_size;
+    yo_FileStatus status;
+};
+yo_type_alias(yo_FileReadResult, struct yo_FileReadResult);
 
 /// Read file contents to a string.
 ///

@@ -83,13 +83,15 @@ enum yo_LogLevel {
     YO_LOG_LEVEL_DEBUG,
     YO_LOG_LEVEL_COUNT,
 };
+yo_type_alias(yo_LogLevel, enum yo_LogLevel);
 
-typedef struct yo_api yo_LogInfo {
-    cstring           file_name;
-    cstring           function_name;
-    u32               line;
-    enum psh_LogLevel level;
-} psh_LogInfo;
+struct yo_api yo_LogInfo {
+    cstring     file_name;
+    cstring     function_name;
+    u32         line;
+    yo_LogLevel level;
+};
+yo_type_alias(yo_LogInfo, struct yo_LogInfo);
 
 /// Log a message to the standard error stream.
 yo_api void yo_impl_log_msg(yo_LogInfo info, cstring msg);

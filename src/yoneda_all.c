@@ -31,8 +31,6 @@
 #include "yoneda_log.c"
 #include "yoneda_memory.c"
 #include "yoneda_arena.c"
-#include "yoneda_stack.c"
-#include "yoneda_memory_manager.c"
 #include "yoneda_string.c"
 #include "yoneda_streams.c"
 // clang-format on

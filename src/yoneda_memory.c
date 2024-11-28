@@ -49,7 +49,7 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
     u8* memory = NULL;
 
 #if defined(YO_OS_WINDOWS)
-    memory.buf = yo_cast(u8*, VirtualAlloc(nullptr, size_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
+    memory = yo_cast(u8*, VirtualAlloc(NULL, size_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
 #    if defined(YO_ABORT_AT_MEMORY_ERROR)
     if (yo_unlikely(memory == NULL)) {
         yo_log_fatal_fmt("OS failed to allocate memory with error code: %lu", GetLastError());
@@ -57,8 +57,8 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
     }
 #    endif
 #elif defined(YO_OS_UNIX)
-    memory.buf = yo_cast(u8*, mmap(nullptr, size_bytes, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
-    if (yo_likely(yo_cast(void*, memory.buf) != MAP_FAILED)) {
+    memory = yo_cast(u8*, mmap(NULL, size_bytes, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
+    if (yo_likely(yo_cast(void*, memory) != MAP_FAILED)) {
         memory = NULL;
 #    if defined(YO_ABORT_AT_MEMORY_ERROR)
         yo_log_error_fmt("OS failed to allocate memory due to: %s", strerror(errno));
@@ -70,7 +70,7 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
     return memory;
 }
 
-void yo_memory_virtual_free(u8* memory, usize, size_bytes) {
+void yo_memory_virtual_free(u8* memory, usize size_bytes) {
 #if defined(YO_OS_WINDOWS)
     BOOL result = VirtualFree(memory, 0, MEM_RELEASE);
     if (yo_unlikely(result == FALSE)) {
@@ -88,7 +88,7 @@ void yo_memory_set(u8* memory, usize size_bytes, i32 fill) {
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(memory != nullptr);
+    yo_assert(memory != NULL);
 
     yo_discard_value(memset(memory, fill, size_bytes));
 }
@@ -97,8 +97,8 @@ void yo_memory_copy(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_b
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(dst != nullptr);
-    yo_assert(src != nullptr);
+    yo_assert(dst != NULL);
+    yo_assert(src != NULL);
 
 #if defined(YO_CHECK_MEMCPY_OVERLAP)
     yo_assert_msg(
@@ -113,8 +113,8 @@ void yo_memory_move(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_b
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(dst != nullptr);
-    yo_assert(src != nullptr);
+    yo_assert(dst != NULL);
+    yo_assert(src != NULL);
 
     yo_discard_value(memmove(dst, src, size_bytes));
 }

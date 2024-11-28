@@ -22,10 +22,10 @@
 /// Description: Implementation of the file system management utilities.
 /// Author: Luiz G. Mugnaini A. <luizmugnaini@gmail.com>
 
-#include <yoneda_streams.hpp>
+#include <yoneda_streams.h>
 
 #include <stdio.h>
-#include <yoneda_core.hpp>
+#include <yoneda_core.h>
 
 #if defined(YO_OS_WINDOWS)
 #    include <Windows.h>
@@ -54,11 +54,11 @@ yo_internal cstring const YO_IMPL_FILE_FLAG_TO_CSTR[YO_FILE_FLAG_COUNT] = {
 };
 
 yo_inline bool yo_has_read_permission(yo_FileFlag flag) {
-    return (flag == OpenFileFlag::READ_TEXT) ||
-           (flag == OpenFileFlag::READ_TEXT_EXTENDED) ||
-           (flag == OpenFileFlag::READ_BIN) ||
-           (flag == OpenFileFlag::READ_BIN_EXTENDED) ||
-           (flag == OpenFileFlag::WRITE_EXTENDED);
+    return (flag == YO_FILE_FLAG_READ_TEXT) ||
+           (flag == YO_FILE_FLAG_READ_TEXT_EXTENDED) ||
+           (flag == YO_FILE_FLAG_READ_BIN) ||
+           (flag == YO_FILE_FLAG_READ_BIN_EXTENDED) ||
+           (flag == YO_FILE_FLAG_WRITE_EXTENDED);
 }
 
 yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag flag) {
@@ -95,11 +95,11 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
         }
     }
 
-    yo_ArenaCheckpoint arena_checkpoint = yo_arena_make_checkpoint(arena);
+    yo_ArenaCheckpoint arena_checkpoint = yo_make_arena_checkpoint(arena);
 
     // Allocate target buffer.
     u8* buf;
-    if (yo_likely(status == YO_FILE_STATUS_NONE) {
+    if (yo_likely(status == YO_FILE_STATUS_NONE)) {
         yo_assert_msg(arena != NULL, "Invalid arena.");
 
         buf = yo_arena_alloc(arena, u8, buf_size);
@@ -110,9 +110,9 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
 
     // Read file content to the target buffer.
     if (yo_likely(status == YO_FILE_STATUS_NONE)) {
-        usize read_count = fread(buf, sizeof(u8), buf_size, file_handle);
+        usize read_count = fread(buf, yo_sizeof(u8), buf_size, file_handle);
 
-        if (psh_unlikely(read_count != buf_size)) {
+        if (yo_unlikely(read_count != buf_size)) {
             yo_arena_checkpoint_restore(arena_checkpoint);
 
             buf      = NULL;
@@ -129,7 +129,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
 
     return (yo_FileReadResult){
         .buf      = buf,
-        .buf_size = size,
+        .buf_size = buf_size,
         .status   = status,
     };
 }
@@ -137,7 +137,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
 yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk_size) {
     yo_ArenaCheckpoint arena_checkpoint = yo_make_arena_checkpoint(arena);
 
-    yo_DynString content = yo_make_dyn_string(arena, initial_buf_size);
+    yo_DynString content = yo_make_dynstring(arena, initial_buf_size);
 
 #if defined(YO_OS_WINDOWS)
     HANDLE handle_stdin = GetStdHandle(STD_INPUT_HANDLE);
@@ -150,12 +150,12 @@ yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk
 
     for (;;) {
         if (content.length + read_chunk_size > content.capacity) {
-            yo_dyn_string_resize(&content, content.length + read_chunk_size);
+            yo_dynstring_resize(&content, content.length + read_chunk_size);
         }
 
         DWORD bytes_read;
-        BOOL  success = ReadFile(handle_stdin, content.end(), read_chunk_size, &bytes_read, nullptr);
-        content.count += bytes_read;
+        BOOL  success = ReadFile(handle_stdin, &content.buf[content.length], read_chunk_size, &bytes_read, NULL);
+        content.length += bytes_read;
         if (yo_unlikely(!success)) {
             yo_log_error("Unable to read from the stdin stream.");
 
@@ -170,7 +170,7 @@ yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk
 #else
     for (;;) {
         if (content.length + read_chunk_size > content.capacity) {
-            yo_dyn_string_resize(&content, content.length + read_chunk_size);
+            yo_dynstring_resize(&content, content.length + read_chunk_size);
         }
 
         isize bytes_read = read(STDIN_FILENO, &content.buf[content.length], read_chunk_size);
@@ -190,22 +190,22 @@ yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk
 #endif
 
     // Add null terminator to the end of the string.
-    if (content.count == content.capacity) {
-        content.resize(content.count + 1);
+    if (content.length == content.capacity) {
+        yo_dynstring_resize(&content, content.length + 1);
     }
-    content.buf[content.count] = 0;
+    content.buf[content.length] = 0;
 
     return content;
 }
 
-yo_String yo_absolute_path(yo_Arena* arena, cstring file_path) {
+yo_DynString yo_absolute_path(yo_Arena* arena, cstring file_path) {
     yo_assert(arena != NULL);
     yo_ArenaCheckpoint arena_checkpoint = yo_make_arena_checkpoint(arena);
 
-    yo_String abs_path = yo_make_dyn_string(arena, YO_IMPL_PATH_MAX_CHAR_COUNT);
+    yo_DynString abs_path = yo_make_dynstring(arena, YO_IMPL_PATH_MAX_CHAR_COUNT);
 
 #if defined(YO_OS_WINDOWS)
-    DWORD result = GetFullPathName(file_path, YO_IMPL_PATH_MAX_CHAR_COUNT, abs_path.buf, nullptr);
+    DWORD result = GetFullPathName(file_path, YO_IMPL_PATH_MAX_CHAR_COUNT, abs_path.buf, NULL);
     if (yo_unlikely(result == 0)) {
         yo_log_error_fmt(
             "Unable to obtain the full path of %s due to the error: %lu",

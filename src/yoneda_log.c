@@ -31,9 +31,9 @@
 
 // @TODO: enable the user to set a different output stream for the logs.
 
-#define YO_IMPL_LOG_FMT = "%s [%s:%u:%s] %s\n"
+#define YO_IMPL_LOG_FMT "%s [%s:%u:%s] %s\n"
 
-yo_internal cstring const YO_IMPL_LOG_LEVEL_STR[LOG_LEVEL_COUNT] = {
+yo_internal cstring const YO_IMPL_LOG_LEVEL_STR[YO_LOG_LEVEL_COUNT] = {
 #if !defined(YO_DISABLE_ANSI_COLORS)
     "\x1b[1;41m[FATAL]\x1b[0m",
     "\x1b[1;31m[ERROR]\x1b[0m",
@@ -49,7 +49,7 @@ yo_internal cstring const YO_IMPL_LOG_LEVEL_STR[LOG_LEVEL_COUNT] = {
 #endif
 };
 
-void yo_impl_log_msg(LogInfo info, cstring msg) {
+void yo_impl_log_msg(yo_LogInfo info, cstring msg) {
     yo_discard_value(fprintf(
         stderr,
         YO_IMPL_LOG_FMT,
@@ -60,7 +60,7 @@ void yo_impl_log_msg(LogInfo info, cstring msg) {
         msg));
 }
 
-void yo_impl_log_fmt(LogInfo info, cstring fmt, ...) {
+void yo_impl_log_fmt(yo_LogInfo info, cstring fmt, ...) {
     char msg[YO_MAX_LOG_MESSAGE_LENGTH];
 
     va_list args;
@@ -72,7 +72,7 @@ void yo_impl_log_fmt(LogInfo info, cstring fmt, ...) {
 
         // Stamp the message with a null-terminator.
         usize ures_len = yo_cast(usize, res_len);
-        usize msg_len  = yo_min_value(ures_len, MAX_MSG_LEN);
+        usize msg_len  = yo_min_value(ures_len, YO_MAX_LOG_MESSAGE_LENGTH);
         msg[msg_len]   = 0;
     }
     va_end(args);

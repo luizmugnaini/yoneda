@@ -25,8 +25,8 @@
 #ifndef YONEDA_ASSERT_H
 #define YONEDA_ASSERT_H
 
-#include <psh/core.hpp>
-#include <psh/log.hpp>
+#include <yoneda_core.h>
+#include <yoneda_log.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {

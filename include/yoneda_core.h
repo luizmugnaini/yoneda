@@ -199,7 +199,7 @@ extern "C" {
 #        define yo_api __attribute__((visibility("default"))
 #    endif
 #else
-#    define psh_api
+#    define yo_api
 #endif
 
 // -----------------------------------------------------------------------------
@@ -318,13 +318,14 @@ extern "C" {
 #endif
 
 /// Discard the value of a given expression.
-#define yo_discard_value(x) (void)(x)
+#define yo_impl_discard_value(value) ((void)(value))
+#define yo_discard_value(expr)       yo_impl_discard_value((expr))
 
 // -----------------------------------------------------------------------------
 // Fundamental types.
 // -----------------------------------------------------------------------------
 
-#define yo_type_alias(alias, type) typename type alias
+#define yo_type_alias(alias, type) typedef type alias
 
 /// Unsigned integer type.
 yo_type_alias(u8, uint8_t);
@@ -357,21 +358,37 @@ yo_type_alias(cstring, char const*);
 ///
 /// This gives a better semantic meaning of the return of a failable function, while still
 /// preserving the use of booleans for simple use.
-typedef enum yo_Status {
+enum yo_Status {
     YO_STATUS_FAILED = false,
     YO_STATUS_OK     = true,
-} yo_Status;
+};
+yo_type_alias(yo_Status, enum yo_Status);
 
 // -----------------------------------------------------------------------------
 // Common operations.
 // -----------------------------------------------------------------------------
 
+/// Cast a value to another type.
 #define yo_cast(T, value) ((T)(value))
 
+/// Create a default value of a given type.
 #if defined(YO_LANG_CPP)
 #    define yo_make_default(T) ((T){})
 #else
 #    define yo_make_default(T) ((T){0})
+#endif
+
+/// The element count of a C array.
+#define yo_countof(array) (yo_sizeof(array) / yo_sizeof(*array))
+
+#define yo_offsetof(T, member) yo_cast(usize, yo_cast(u8*, &yo_cast(T*, 0)->member) - yo_cast(u8*, 0))
+
+#define yo_sizeof(T) sizeof(T)
+
+#if defined(YO_LANG_C)
+#    define yo_alignof _Alignof
+#else
+#    define yo_alignof alignof
 #endif
 
 // -----------------------------------------------------------------------------

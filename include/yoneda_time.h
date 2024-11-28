@@ -25,7 +25,7 @@
 #ifndef YONEDA_TIME_H
 #define YONEDA_TIME_H
 
-#include <yoneda_core.hpp>
+#include <yoneda_core.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {

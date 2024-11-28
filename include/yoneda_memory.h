@@ -63,7 +63,7 @@ yo_api void yo_memory_virtual_free(u8* memory, usize size_bytes);
 /// Does nothing if `ptr` is a null pointer.
 yo_api void yo_memory_set(u8* memory, usize size_bytes, i32 fill);
 
-#define yo_zero_struct_ptr(struct_ptr) yo_memory_set(struct_ptr, sizeof(*struct_ptr), 0)
+#define yo_zero_struct_ptr(struct_ptr) yo_memory_set(struct_ptr, yo_sizeof(*struct_ptr), 0)
 
 /// Simple wrapper around `memcpy`.
 ///

@@ -59,6 +59,7 @@ struct yo_api yo_StackHeader {
     /// memory address of the last allocated block (after its header).
     usize previous_offset;
 };
+yo_type_alias(yo_StackHeader, struct yo_StackHeader);
 
 /// Stack memory allocator.
 ///
@@ -98,6 +99,7 @@ struct yo_api yo_Stack {
     usize offset;
     usize previous_offset;
 };
+yo_type_alias(yo_Stack, struct yo_Stack);
 
 yo_inline void init(FatPtr<u8> memory) {
     yo_assert_msg(this->capacity == 0, "Tried to re-initialize an initialized Stack.");

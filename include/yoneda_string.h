@@ -36,11 +36,12 @@ extern "C" {
 // String utilities.
 // -----------------------------------------------------------------------------
 
-typedef enum yo_StrCmp {
+enum yo_StrCmp {
     YO_STR_CMP_LESS_THAN,
     YO_STR_CMP_EQUAL,
     YO_STR_CMP_GREATER_THAN,
-} yo_StrCmp;
+};
+yo_type_alias(yo_StrCmp, enum yo_StrCmp);
 
 yo_api usize yo_cstring_length(cstring str);
 
@@ -62,31 +63,33 @@ yo_api yo_inline char yo_digit_to_char(u8 digit) {
 // -----------------------------------------------------------------------------
 
 /// Immutable string with known length.
-typedef struct yo_api yo_String {
+struct yo_api yo_String {
     cstring buf;
     usize   length;
-} yo_String;
+};
+yo_type_alias(yo_String, struct yo_String);
 
 /// Create a string at compile time from a given string literal.
 ///
 /// Note: You should ONLY use these macros with string literals, like "one ring rule them all".
-#define yo_comptime_make_string(string_literal) \
-    (yo_String) {                               \
-        .buf    = string_literal,               \
-        .length = sizeof(cstr_literal - 1),     \
+#define yo_comptime_make_string(string_literal)  \
+    (yo_String) {                                \
+        .buf    = string_literal,                \
+        .length = yo_sizeof(string_literal - 1), \
     }
 
 yo_api yo_inline yo_String yo_make_string(cstring str) {
-    return (yo_String){str, yo_cstr_length(str)};
+    return (yo_String){str, yo_cstring_length(str)};
 }
 
 /// Dynamically sized string.
-typedef struct yo_api yo_DynString {
-    char*  buf;
-    usize  length;
-    usize  capacity;
-    Arena* arena;
-} yo_DynString;
+struct yo_api yo_DynString {
+    char*     buf;
+    usize     length;
+    usize     capacity;
+    yo_Arena* arena;
+};
+yo_type_alias(yo_DynString, struct yo_DynString);
 
 yo_api yo_inline yo_DynString yo_make_dynstring(yo_Arena* arena, usize capacity) {
     char* memory = yo_arena_alloc(arena, char, capacity);
@@ -100,7 +103,7 @@ yo_api yo_inline yo_DynString yo_make_dynstring(yo_Arena* arena, usize capacity)
     };
 }
 
-yo_api yo_inline void yo_init_dynstring(yo_String* string, yo_Arena* arena, usize capacity) {
+yo_api yo_inline void yo_init_dynstring(yo_DynString* string, yo_Arena* arena, usize capacity) {
     char* memory = yo_arena_alloc(arena, char, capacity);
     yo_assert_msg(memory != NULL, "Failed to allocate memory.");
 
@@ -110,10 +113,10 @@ yo_api yo_inline void yo_init_dynstring(yo_String* string, yo_Arena* arena, usiz
     string->arena    = arena;
 }
 
-yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_String str) {
-    yo_DynString dstring = yo_make_string(arena, string.length + 1);
+yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_String string) {
+    yo_DynString dstring = yo_make_dynstring(arena, string.length + 1);
 
-    yo_memory_copy(yo_cast(u8*, dstring.buf), yo_cast(u8 const*, string.buf), sizeof(char) * string.length);
+    yo_memory_copy(yo_cast(u8*, dstring.buf), yo_cast(u8 const*, string.buf), yo_sizeof(char) * string.length);
     dstring.length = string.length;
 
     return dstring;
@@ -121,8 +124,8 @@ yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_
 
 yo_api yo_inline yo_String yo_make_string_from_dynstring(yo_DynString const* dstring) {
     return (yo_String){
-        .buf    = dstring.buf,
-        .length = dstring.length,
+        .buf    = dstring->buf,
+        .length = dstring->length,
     };
 }
 

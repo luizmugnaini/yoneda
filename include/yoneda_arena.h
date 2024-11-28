@@ -39,10 +39,11 @@ struct yo_Arena;
 ///
 /// You can create a checkpoint with `arena_make_checkpoint` and restore the arena to
 /// a given checkpoint via `arena_restore_state`.
-typedef struct yo_api yo_ArenaCheckpoint {
+struct yo_api yo_ArenaCheckpoint {
     struct yo_Arena* arena;
     usize            saved_offset;
-} yo_ArenaCheckpoint;
+};
+yo_type_alias(yo_ArenaCheckpoint, struct yo_ArenaCheckpoint);
 
 /// Arena allocator
 ///
@@ -50,14 +51,15 @@ typedef struct yo_api yo_ArenaCheckpoint {
 /// allocation takes nothing more than incrementing an offset.
 ///
 /// The arena does not own memory, thus it is not responsible for the freeing of it.
-typedef struct yo_api yo_Arena {
+struct yo_api yo_Arena {
     /// Not-owned block of memory.
     u8*   buf;
     /// Capacity in bytes of the arena block of memory.
-    usize capacity = 0;
+    usize capacity;
     /// The current offset to the free-space in the memory block.
-    usize offset   = 0;
-} yo_Arena;
+    usize offset;
+};
+yo_type_alias(yo_Arena, struct yo_Arena);
 
 // -----------------------------------------------------------------------------
 // Allocation procedures.
@@ -77,17 +79,17 @@ u8* yo_arena_realloc_align(
 #define yo_arena_alloc(arena, ValueType, count) \
     yo_cast(                                    \
         ValueType*,                             \
-        yo_arena_alloc_align(arena, sizeof(ValueType) * count, alignof(ValueType)))
+        yo_arena_alloc_align(arena, yo_sizeof(ValueType) * count, yo_alignof(ValueType)))
 
-#define arena_realloc(arena, ValueType, block, current_count, new_count) \
-    yo_cast(                                                             \
-        ValueType*,                                                      \
-        yo_arena_realloc_align(                                          \
-            arena,                                                       \
-            yo_cast(u8*, block),                                         \
-            sizeof(ValueType) * current_count,                           \
-            sizeof(ValueType) * new_count,                               \
-            alignof(ValueType)))
+#define yo_arena_realloc(arena, ValueType, block, current_count, new_count) \
+    yo_cast(                                                                \
+        ValueType*,                                                         \
+        yo_arena_realloc_align(                                             \
+            arena,                                                          \
+            yo_cast(u8*, block),                                            \
+            yo_sizeof(ValueType) * current_count,                           \
+            yo_sizeof(ValueType) * new_count,                               \
+            yo_alignof(ValueType)))
 
 // -----------------------------------------------------------------------------
 // Temporary memory management.
@@ -99,14 +101,14 @@ yo_inline void yo_arena_clear(yo_Arena* arena) {
 }
 
 /// Create a restorable checkpoint for the arena.
-yo_inline yo_ArenaCheckpoint yo_make_arena_checkpoint(yo_Arena const* arena) {
+yo_inline yo_ArenaCheckpoint yo_make_arena_checkpoint(yo_Arena* arena) {
     return (yo_ArenaCheckpoint){.arena = arena, .saved_offset = arena->offset};
 }
 
 /// Restore the arena state to a given checkpoint.
-yo_inline void yo_checkpoint_restore(yo_ArenaCheckpoint* checkpoint) {
-    checkpoint->arena->offset = checkpoint.saved_offset;
-    checkpoint->arena         = NULL;  // Invalidate the checkpoint for further uses.
+yo_inline void yo_arena_checkpoint_restore(yo_ArenaCheckpoint checkpoint) {
+    checkpoint.arena->offset = checkpoint.saved_offset;
+    checkpoint.arena         = NULL;  // Invalidate the checkpoint for further uses.
 }
 
 /// Make an arena that owns its memory.
@@ -117,7 +119,7 @@ yo_inline yo_Arena yo_make_owned_arena(usize capacity) {
     u8* memory = yo_memory_virtual_alloc(capacity);
     yo_assert_msg(memory != NULL, "Failed to allocate memory.");
 
-    return yo_Arena{.buf = buf, .capacity = capacity};
+    return (yo_Arena){.buf = memory, .capacity = capacity};
 }
 
 /// Free the memory of an arena that owns its memory.

@@ -36,19 +36,19 @@ struct foo {
 };
 
 yo_internal void core_type_sizes(void) {
-    yo_assert(sizeof(u8) == 1);
-    yo_assert(sizeof(u16) == 2);
-    yo_assert(sizeof(u32) == 4);
-    yo_assert(sizeof(u64) == 8);
-    yo_assert(sizeof(usize) == 8);
-    yo_assert(sizeof(i8) == 1);
-    yo_assert(sizeof(i16) == 2);
-    yo_assert(sizeof(i32) == 4);
-    yo_assert(sizeof(i64) == 8);
-    yo_assert(sizeof(f32) == 4);
-    yo_assert(sizeof(f64) == 8);
-    yo_assert(sizeof(uptr) == 8);
-    yo_assert(sizeof(iptr) == 8);
+    yo_assert(yo_sizeof(u8) == 1);
+    yo_assert(yo_sizeof(u16) == 2);
+    yo_assert(yo_sizeof(u32) == 4);
+    yo_assert(yo_sizeof(u64) == 8);
+    yo_assert(yo_sizeof(usize) == 8);
+    yo_assert(yo_sizeof(i8) == 1);
+    yo_assert(yo_sizeof(i16) == 2);
+    yo_assert(yo_sizeof(i32) == 4);
+    yo_assert(yo_sizeof(i64) == 8);
+    yo_assert(yo_sizeof(f32) == 4);
+    yo_assert(yo_sizeof(f64) == 8);
+    yo_assert(yo_sizeof(uptr) == 8);
+    yo_assert(yo_sizeof(iptr) == 8);
     test_passed();
 }
 
