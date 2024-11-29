@@ -75,7 +75,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
     }
 
     // Get the file size in bytes.
-    usize buf_size;
+    usize buf_size = 0;
     if (yo_likely(status == YO_FILE_STATUS_NONE)) {
         if (yo_unlikely(fseek(file_handle, 0, SEEK_END) == -1)) {
             perror("Couldn't seek end of file.\n");
@@ -98,7 +98,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
     yo_ArenaCheckpoint arena_checkpoint = yo_make_arena_checkpoint(arena);
 
     // Allocate target buffer.
-    u8* buf;
+    u8* buf = NULL;
     if (yo_likely(status == YO_FILE_STATUS_NONE)) {
         yo_assert_msg(arena != NULL, "Invalid arena.");
 

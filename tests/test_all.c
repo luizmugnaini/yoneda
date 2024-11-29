@@ -19,7 +19,7 @@
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
 // Source for the whole Yoneda library.
-#include "../src/all.c"
+#include "../src/yoneda_all.c"
 
 // Prevent tests from defining a `main` function.
 #define YO_TEST_NO_MAIN

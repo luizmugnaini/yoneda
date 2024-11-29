@@ -32,7 +32,7 @@
 #    include <time.h>
 #endif
 
-f64 yo_current_time_in_seconds() {
+f64 yo_current_time_in_seconds(void) {
     f64 curr_time = -1.0;
 
 #if defined(YO_OS_WINDOWS)
@@ -65,8 +65,8 @@ void yo_sleep_milliseconds(f64 ms) {
 #elif defined(YO_OS_UNIX)
     timespec request_sleep;
     request_sleep.tv_sec     = yo_cast(time_t, ms / 1000);
-    request_sleep.tv_nsec    = (yo_cast(long, ms) - yo_cast(long, (request_sleep.tv_sec) * 1000) * 1'000'000;
-    timespec remaining_sleep = {};
+    request_sleep.tv_nsec    = yo_cast(long, ms) - yo_cast(long, (request_sleep.tv_sec) * 1000) * 1e6;
+    timespec remaining_sleep = yo_make_default(timespec);
 
     i32 status = nanosleep(&request_sleep, &remaining_sleep);
     if (yo_unlikely(status == -1)) {

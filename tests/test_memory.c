@@ -18,12 +18,12 @@
 /// Description: Tests regarding memory handling in general.
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
-#include <yoneda/assert.h>
-#include <yoneda/core.h>
+#include <yoneda_assert.h>
+#include <yoneda_core.h>
 
 #include <stdio.h>
 
-#define test_passed() yo_info_fmt("Test %s passed.", yo_source_func())
+#define test_passed() yo_log_info_fmt("Test %s passed.", yo_source_function_name())
 
 struct foo {
     u8    a[64];  // offset 0.

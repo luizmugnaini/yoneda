@@ -35,12 +35,12 @@
 #    include <sys/mman.h>
 #endif
 
-bool yo_arch_is_little_endian() {
+bool yo_arch_is_little_endian(void) {
     i32 integer = 1;
     return yo_cast(bool, *(yo_cast(u8*, &integer)));
 }
 
-bool yo_arch_is_bit_endian() {
+bool yo_arch_is_bit_endian(void) {
     i32 integer = 1;
     return yo_cast(bool, !*(yo_cast(u8*, &integer)));
 }
@@ -72,6 +72,8 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
 
 void yo_memory_virtual_free(u8* memory, usize size_bytes) {
 #if defined(YO_OS_WINDOWS)
+    yo_discard_value(size_bytes);
+
     BOOL result = VirtualFree(memory, 0, MEM_RELEASE);
     if (yo_unlikely(result == FALSE)) {
         yo_log_error_fmt("Failed free memory with error code: %lu", GetLastError());

@@ -38,8 +38,8 @@ extern "C" {
 /// Check whether the current architecture is little-endian or big-endian.
 ///
 /// Note: Unfortunately, these checks can only be reliably made at runtime.
-yo_api bool yo_arch_is_little_endian();
-yo_api bool yo_arch_is_bit_endian();
+yo_api bool yo_arch_is_little_endian(void);
+yo_api bool yo_arch_is_bit_endian(void);
 
 // -----------------------------------------------------------------------------
 // Memory manipulation utilities.

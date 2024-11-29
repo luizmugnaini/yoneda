@@ -48,7 +48,7 @@ struct yo_api yo_Vec2 {
 yo_type_alias(yo_Vec2, struct yo_Vec2);
 
 /// Check if the components of the vector are inside the floating point zero range.
-yo_api yo_inline bool yo_vec2_is_zero(yo_Vec2 v, f32 zero_range) {
+yo_api yo_inline bool yo_vec2_is_zero(yo_Vec2 v) {
     return yo_f32_approx_equal(v.x, 0.0f) && yo_f32_approx_equal(v.y, 0.0f);
 }
 
@@ -115,7 +115,7 @@ struct yo_api yo_Vec3 {
 yo_type_alias(yo_Vec3, struct yo_Vec3);
 
 /// Check if the components of the vector are inside the floating point zero range.
-yo_api yo_inline bool yo_vec3_is_zero(yo_Vec3 v, f32 zero_range) {
+yo_api yo_inline bool yo_vec3_is_zero(yo_Vec3 v) {
     return yo_f32_approx_equal(v.x, 0.0f) &&
            yo_f32_approx_equal(v.y, 0.0f) &&
            yo_f32_approx_equal(v.z, 0.0f);
@@ -280,7 +280,7 @@ yo_api yo_inline yo_Vec3 yo_ivec3_normalized(yo_IVec3 v) {
     return (yo_Vec3){yo_cast(f32, v.x) / len, yo_cast(f32, v.y) / len, yo_cast(f32, v.z) / len};
 }
 
-yo_api yo_inline f32 yo_ivec3_dot(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_api yo_inline i32 yo_ivec3_dot(yo_IVec3 lhs, yo_IVec3 rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
@@ -356,7 +356,7 @@ yo_api yo_inline f32* yo_mat3_at(yo_Mat3* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_Mat3 yo_mat3_id() {
+yo_api yo_inline yo_Mat3 yo_mat3_id(void) {
     // clang-format off
     return (yo_Mat3){
         1.0f, 0.0f, 0.0f,
@@ -418,7 +418,7 @@ yo_api yo_inline f32* yo_colmat3_at(yo_ColMat3* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_ColMat3 yo_colmat3_id() {
+yo_api yo_inline yo_ColMat3 yo_colmat3_id(void) {
     // clang-format off
     return (yo_ColMat3){
         1.0f, 0.0f, 0.0f,
@@ -442,7 +442,7 @@ f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_ColMat4 yo_colmat4_id() {
+yo_api yo_inline yo_ColMat4 yo_colmat4_id(void) {
     // clang-format off
     return (yo_ColMat4){
         1.0f, 0.0f, 0.0f, 0.0f,

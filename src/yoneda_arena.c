@@ -36,13 +36,13 @@
             arena->capacity - arena->offset);                                            \
     } while (0)
 
-#define yo_impl_arena_is_empty(arena) (((arena)->capacity == 0) || ((arena)->buf == NULL))
+#define yo_impl_arena_is_empty(arena) (((arena == NULL) || (arena)->capacity == 0) || ((arena)->buf == NULL))
 
 u8* yo_arena_alloc_align(yo_Arena* arena, usize size_bytes, u32 alignment) {
     if (yo_unlikely(size_bytes == 0)) {
         return NULL;
     }
-    if (yo_unlikely(yo_impl_arena_is_empty(arena))) {
+    if (yo_unlikely(arena == NULL)) {
         yo_impl_arena_report_out_of_memory(arena, size_bytes, alignment);
         yo_impl_return_from_memory_error();
     }
@@ -72,7 +72,7 @@ u8* yo_arena_realloc_align(
     yo_assert_msg(new_size_bytes != 0, "Don't use realloc to free blocks of memory.");
     yo_assert_msg((block != NULL) && (current_size_bytes != 0), "Don't use realloc to allocate new memory.");
 
-    if (yo_unlikely(yo_impl_arena_is_empty(arena))) {
+    if (yo_unlikely(arena == NULL)) {
         yo_impl_arena_report_out_of_memory(arena, new_size_bytes, alignment);
         yo_impl_return_from_memory_error();
     }
