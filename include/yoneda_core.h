@@ -25,8 +25,9 @@
 #ifndef YONEDA_CORE_H
 #define YONEDA_CORE_H
 
-#include <stdbool.h>
-#include <stdint.h>
+#include <stdbool.h>  // bool
+#include <stddef.h>   // offsetof
+#include <stdint.h>   // Size-specific integral arithmetic types.
 
 // -----------------------------------------------------------------------------
 // - Macros for C++ compliance -
@@ -54,14 +55,48 @@ extern "C" {
 // Yoneda library compile-time flags.
 // -----------------------------------------------------------------------------
 
-// Activate default debug checks.
-#if defined(YO_DEBUG)
-#    ifndef YO_CHECK_BOUNDS
-#        define YO_CHECK_BOUNDS
+#if !defined(YO_DEBUG)
+#    ifndef YO_ENABLE_ASSERTS
+#        define YO_ENABLE_ASSERTS 0
 #    endif
-#    ifndef YO_CHECK_MEMCPY_OVERLAP
-#        define YO_CHECK_MEMCPY_OVERLAP
+#    ifndef YO_ENABLE_ASSERT_NOT_NULL
+#        define YO_ENABLE_ASSERT_NOT_NULL 0
 #    endif
+#    ifndef YO_ENABLE_SAFE_POINTER_ARITHMETIC
+#        define YO_ENABLE_SAFE_POINTER_ARITHMETIC 0
+#    endif
+#    ifndef YO_ENABLE_BOUNDS_CHECK
+#        define YO_ENABLE_BOUNDS_CHECK 0
+#    endif
+#    ifndef YO_ENABLE_MEMCPY_OVERLAP_CHECK
+#        define YO_ENABLE_MEMCPY_OVERLAP_CHECK 0
+#    endif
+#    ifndef YO_ENABLE_LOGGING
+#        define YO_ENABLE_LOGGING 0
+#    endif
+#else  // YO_DEBUG
+#    ifndef YO_ENABLE_ASSERTS
+#        define YO_ENABLE_ASSERTS 1
+#    endif
+#    ifndef YO_ENABLE_ASSERT_NOT_NULL
+#        define YO_ENABLE_ASSERT_NOT_NULL 1
+#    endif
+#    ifndef YO_ENABLE_SAFE_POINTER_ARITHMETIC
+#        define YO_ENABLE_SAFE_POINTER_ARITHMETIC 1
+#    endif
+#    ifndef YO_ENABLE_BOUNDS_CHECK
+#        define YO_ENABLE_BOUNDS_CHECK 1
+#    endif
+#    ifndef YO_ENABLE_MEMCPY_OVERLAP_CHECK
+#        define YO_ENABLE_MEMCPY_OVERLAP_CHECK 1
+#    endif
+#    ifndef YO_ENABLE_LOGGING
+#        define YO_ENABLE_LOGGING 1
+#    endif
+#endif
+
+#ifndef YO_ENABLE_ANSI_COLORS
+#    define YO_ENABLE_ANSI_COLORS 0
 #endif
 
 // -----------------------------------------------------------------------------
@@ -90,7 +125,7 @@ extern "C" {
 #endif
 
 /// Windows-specific tweaks.
-#if defined(YO_OS_WINDOWS_32) || defined(YO_OS_WINDOWS_64)
+#if defined(YO_OS_WINDOWS)
 #    ifndef WIN32_LEAN_AND_MEAN
 #        define WIN32_LEAN_AND_MEAN
 #    endif
@@ -145,7 +180,7 @@ extern "C" {
 #    ifndef NOIME
 #        define NOIME
 #    endif
-#endif  // YO_OS_WINDOWS_32 || YO_OS_WINDOWS_64
+#endif  // YO_OS_WINDOWS
 
 /// Macros for compiler detection.
 #if defined(_MSC_VER)
@@ -364,6 +399,14 @@ enum yo_Status {
 };
 yo_type_alias(yo_Status, enum yo_Status);
 
+#if defined(YO_LANG_C)
+#    if defined(__typeof__)
+#        define yo_type_of(var) __typeof__(var)
+#    endif
+#else
+#    define yo_type_of(var) decltype(var)
+#endif
+
 // -----------------------------------------------------------------------------
 // Common operations.
 // -----------------------------------------------------------------------------
@@ -373,22 +416,32 @@ yo_type_alias(yo_Status, enum yo_Status);
 
 /// Create a default value of a given type.
 #if defined(YO_LANG_CPP)
-#    define yo_make_default(T) ((T){})
+#    define yo_make_default(T) (T{})
 #else
 #    define yo_make_default(T) ((T){0})
 #endif
 
-/// The element count of a C array.
-#define yo_countof(array) (yo_sizeof(array) / yo_sizeof(*array))
+/// The element count of a C array (e.g. `u32 array[5]`).
+#define yo_count_of(array_literal) (yo_size_of(array_literal) / yo_size_of(*array_literal))
 
-#define yo_offsetof(T, member) yo_cast(usize, yo_cast(u8*, &yo_cast(T*, 0)->member) - yo_cast(u8*, 0))
+/// Get the offset in bytes of the member of a given struct type.
+#define yo_offset_of(T, member_name) offsetof(T, member_name)
 
-#define yo_sizeof(T) sizeof(T)
+/// Size in bytes of a given type.
+#define yo_size_of(T) sizeof(T)
 
+/// The alignment in bytes, required by a given type.
 #if defined(YO_LANG_C)
-#    define yo_alignof _Alignof
+#    define yo_align_of(T) _Alignof(T)
 #else
-#    define yo_alignof alignof
+#    define yo_align_of(T) alignof(T)
+#endif
+
+/// Alignment hint for forcing a certain alignment in a struct.
+#if defined(YO_LANG_C)
+#    define yo_align_as(T) _Alignas(T)
+#else
+#    define yo_align_as(T) alignas(T)
 #endif
 
 // -----------------------------------------------------------------------------
@@ -396,11 +449,16 @@ yo_type_alias(yo_Status, enum yo_Status);
 // -----------------------------------------------------------------------------
 
 /// Add or subtract an offset from a pointer if and only if the pointer is not null.
-#define yo_ptr_add(ptr, offset) (((ptr) == nullptr) ? nullptr : (ptr + yo_cast(uptr, offset)))
-#define yo_ptr_sub(ptr, offset) (((ptr) == nullptr) ? nullptr : (ptr - yo_cast(iptr, offset)))
+#if YO_ENABLE_SAFE_POINTER_ARITHMETIC
+#    define yo_ptr_add(ptr, offset) (((ptr) == NULL) ? NULL : (ptr + yo_cast(uptr, offset)))
+#    define yo_ptr_sub(ptr, offset) (((ptr) == NULL) ? NULL : (ptr - yo_cast(iptr, offset)))
+#else
+#    define yo_ptr_add(ptr, offset) (ptr + yo_cast(uptr, offset))
+#    define yo_ptr_sub(ptr, offset) (ptr - yo_cast(iptr, offset))
+#endif
 
 /// Check if two pointers refer to the same address in memory.
-#define yo_ptr_same_addr(lhs_ptr, rhs_ptr) (yo_cast(u8*, lhs_ptr) == yo_cast(u8*, rhs_ptr))
+#define yo_ptr_same_addr(lhs_ptr, rhs_ptr) (yo_cast(uptr, yo_cast(u8*, lhs_ptr)) == yo_cast(uptr, yo_cast(u8*, rhs_ptr)))
 
 /// Compute the offset, in bytes, between two pointers.
 #define yo_ptr_offset_bytes(end_ptr, start_ptr) \
@@ -450,6 +508,7 @@ yo_type_alias(yo_Status, enum yo_Status);
 /// Generate a string containing the given expression.
 #define yo_stringify(x) #x
 
+/// Concatenate two tokens as a string.
 #define yo_impl_token_concat(x, y)      x##y
 #define yo_token_concat(prefix, suffix) yo_impl_token_concat(prefix, suffix)
 

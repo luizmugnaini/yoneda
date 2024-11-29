@@ -25,41 +25,41 @@
 
 #define test_passed() yo_log_info_fmt("Test %s passed.", yo_source_function_name())
 
-struct foo {
-    u8    a[64];  // offset 0.
-    f32   b;      // offset 64.
-    bool  c;      // offset 68.
-    i32   d;      // offset 72.
-    u32   e;      // offset 76.
-    usize f;      // offset 80.
-    u8    g;      // offset 88.
-};
-
 yo_internal void core_type_sizes(void) {
-    yo_assert(yo_sizeof(u8) == 1);
-    yo_assert(yo_sizeof(u16) == 2);
-    yo_assert(yo_sizeof(u32) == 4);
-    yo_assert(yo_sizeof(u64) == 8);
-    yo_assert(yo_sizeof(usize) == 8);
-    yo_assert(yo_sizeof(i8) == 1);
-    yo_assert(yo_sizeof(i16) == 2);
-    yo_assert(yo_sizeof(i32) == 4);
-    yo_assert(yo_sizeof(i64) == 8);
-    yo_assert(yo_sizeof(f32) == 4);
-    yo_assert(yo_sizeof(f64) == 8);
-    yo_assert(yo_sizeof(uptr) == 8);
-    yo_assert(yo_sizeof(iptr) == 8);
+    yo_assert(yo_size_of(u8) == 1);
+    yo_assert(yo_size_of(u16) == 2);
+    yo_assert(yo_size_of(u32) == 4);
+    yo_assert(yo_size_of(u64) == 8);
+    yo_assert(yo_size_of(usize) == 8);
+    yo_assert(yo_size_of(i8) == 1);
+    yo_assert(yo_size_of(i16) == 2);
+    yo_assert(yo_size_of(i32) == 4);
+    yo_assert(yo_size_of(i64) == 8);
+    yo_assert(yo_size_of(f32) == 4);
+    yo_assert(yo_size_of(f64) == 8);
+    yo_assert(yo_size_of(uptr) == 8);
+    yo_assert(yo_size_of(iptr) == 8);
     test_passed();
 }
 
 yo_internal void offset_check(void) {
-    yo_assert(yo_offsetof(struct foo, a) == 0);
-    yo_assert(yo_offsetof(struct foo, b) == 64);
-    yo_assert(yo_offsetof(struct foo, c) == 68);
-    yo_assert(yo_offsetof(struct foo, d) == 72);
-    yo_assert(yo_offsetof(struct foo, e) == 76);
-    yo_assert(yo_offsetof(struct foo, f) == 80);
-    yo_assert(yo_offsetof(struct foo, g) == 88);
+    struct foo {
+        u8    a[64];  // offset 0.
+        f32   b;      // offset 64.
+        bool  c;      // offset 68.
+        i32   d;      // offset 72.
+        u32   e;      // offset 76.
+        usize f;      // offset 80.
+        u8    g;      // offset 88.
+    };
+
+    yo_assert(yo_offset_of(struct foo, a) == 0);
+    yo_assert(yo_offset_of(struct foo, b) == 64);
+    yo_assert(yo_offset_of(struct foo, c) == 68);
+    yo_assert(yo_offset_of(struct foo, d) == 72);
+    yo_assert(yo_offset_of(struct foo, e) == 76);
+    yo_assert(yo_offset_of(struct foo, f) == 80);
+    yo_assert(yo_offset_of(struct foo, g) == 88);
     test_passed();
 }
 

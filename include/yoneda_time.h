@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 /// Get the system's current time in seconds.
-yo_api f64 yo_current_time_in_seconds();
+yo_api f64 yo_current_time_in_seconds(void);
 
 /// Suspend the current thread by a certain number of milliseconds.
 yo_api void yo_sleep_milliseconds(f64 ms);

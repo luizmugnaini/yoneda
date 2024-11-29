@@ -31,9 +31,7 @@
 #include <yoneda_time.h>
 #include <yoneda_vec.h>
 #include <yoneda_log.h>
-#include <yoneda_arena.h>
 #include <yoneda_memory.h>
-#include <yoneda_arena.h>
 #include <yoneda_string.h>
 #include <yoneda_streams.h>
 #include <yoneda_bit.h>

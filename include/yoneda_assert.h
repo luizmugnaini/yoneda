@@ -33,7 +33,7 @@ extern "C" {
 #endif
 
 /// Assertion macros.
-#if defined(YO_ENABLE_ASSERTS)
+#if YO_ENABLE_ASSERTS
 #    define yo_assert(expr)                                                             \
         do {                                                                            \
             if (!yo_cast(bool, expr)) {                                                 \
@@ -55,18 +55,14 @@ extern "C" {
                 yo_abort_program();                                                      \
             }                                                                            \
         } while (0)
-#    define yo_assert_constexpr(expr)                                                   \
-        do {                                                                            \
-            if constexpr (!yo_cast(bool, expr)) {                                       \
-                yo_log_fatal_fmt("Assertion failed: %s, msg: %s", #expr, "no message"); \
-                yo_abort_program();                                                     \
-            }                                                                           \
-        } while (0)
+#    if YO_ENABLE_ASSERT_NOT_NULL
+#        define yo_assert_not_null(ptr) yo_assert_msg((ptr) != NULL, "Invalid pointer.")
+#    endif
 #else
 #    define yo_assert(expr)               yo_discard_value(expr)
 #    define yo_assert_msg(expr, msg)      yo_discard_value(expr)
 #    define yo_assert_fmt(expr, fmt, ...) yo_discard_value(expr)
-#    define yo_assert_constexpr(expr)     yo_discard_value(expr)
+#    define yo_assert_not_null(ptr)       yo_discard_value(ptr)
 #endif
 
 /// Abort the program when reaching a non-implemented code-path.

@@ -34,7 +34,7 @@
 #define YO_IMPL_LOG_FMT "%s [%s:%u:%s] %s\n"
 
 yo_internal cstring const YO_IMPL_LOG_LEVEL_STR[YO_LOG_LEVEL_COUNT] = {
-#if !defined(YO_DISABLE_ANSI_COLORS)
+#if YO_ENABLE_ANSI_COLORS
     "\x1b[1;41m[FATAL]\x1b[0m",
     "\x1b[1;31m[ERROR]\x1b[0m",
     "\x1b[1;33m[WARNING]\x1b[0m",

@@ -25,8 +25,8 @@
 #ifndef YONEDA_STRING_H
 #define YONEDA_STRING_H
 
-#include <yoneda_arena.h>
 #include <yoneda_core.h>
+#include <yoneda_memory.h>
 
 #if defined(YO_LANG_CPP)
 extern "C" {
@@ -72,10 +72,10 @@ yo_type_alias(yo_String, struct yo_String);
 /// Create a string at compile time from a given string literal.
 ///
 /// Note: You should ONLY use these macros with string literals, like "one ring rule them all".
-#define yo_comptime_make_string(string_literal)  \
-    (yo_String) {                                \
-        .buf    = string_literal,                \
-        .length = yo_sizeof(string_literal - 1), \
+#define yo_comptime_make_string(string_literal)   \
+    (yo_String) {                                 \
+        .buf    = string_literal,                 \
+        .length = yo_size_of(string_literal - 1), \
     }
 
 yo_api yo_inline yo_String yo_make_string(cstring str) {
@@ -116,7 +116,7 @@ yo_api yo_inline void yo_init_dynstring(yo_DynString* string, yo_Arena* arena, u
 yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_String string) {
     yo_DynString dstring = yo_make_dynstring(arena, string.length + 1);
 
-    yo_memory_copy(yo_cast(u8*, dstring.buf), yo_cast(u8 const*, string.buf), yo_sizeof(char) * string.length);
+    yo_memory_copy(yo_cast(u8*, dstring.buf), yo_cast(u8 const*, string.buf), yo_size_of(char) * string.length);
     dstring.length = string.length;
 
     return dstring;

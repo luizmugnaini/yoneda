@@ -25,7 +25,6 @@
 #include <yoneda_string.h>
 
 #include <string.h>
-#include <yoneda_memory.h>
 
 usize yo_cstring_length(cstring str) {
     usize length = 0;

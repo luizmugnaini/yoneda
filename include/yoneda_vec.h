@@ -233,7 +233,7 @@ yo_api yo_inline void yo_ivec2_eq_mul_ivec2(yo_IVec2* lhs, yo_IVec2 rhs) {
     lhs->x *= rhs.x;
     lhs->y *= rhs.y;
 }
-yo_api yo_inline void yo_ivec2_eq_mul(yo_Vec2* lhs, i32 scalar) {
+yo_api yo_inline void yo_ivec2_eq_mul(yo_IVec2* lhs, i32 scalar) {
     lhs->x *= scalar;
     lhs->y *= scalar;
 }
@@ -434,7 +434,7 @@ struct yo_api yo_ColMat4 {
 yo_type_alias(yo_ColMat4, struct yo_ColMat4);
 
 /// Get the matrix component whose row is `r` and column is `c`.
-f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
+yo_api yo_inline f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
     yo_assert_msg(r <= 4, "Row outside range.");
     yo_assert_msg(c <= 4, "Column outside range.");
 

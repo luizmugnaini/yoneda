@@ -110,7 +110,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
 
     // Read file content to the target buffer.
     if (yo_likely(status == YO_FILE_STATUS_NONE)) {
-        usize read_count = fread(buf, yo_sizeof(u8), buf_size, file_handle);
+        usize read_count = fread(buf, yo_size_of(u8), buf_size, file_handle);
 
         if (yo_unlikely(read_count != buf_size)) {
             yo_arena_checkpoint_restore(arena_checkpoint);

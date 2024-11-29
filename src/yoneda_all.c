@@ -25,12 +25,10 @@
 
 // clang-format off
 #include <yoneda_all.h>
-#include "yoneda_impl_common.h"
 
 #include "yoneda_time.c"
 #include "yoneda_log.c"
 #include "yoneda_memory.c"
-#include "yoneda_arena.c"
 #include "yoneda_string.c"
 #include "yoneda_streams.c"
 // clang-format on

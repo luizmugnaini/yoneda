@@ -36,13 +36,6 @@ extern "C" {
 #endif
 
 #if defined(YO_ENABLE_LOGGING)
-#    define yo_impl_make_log_info(log_level)            \
-        yo_impl_LogInfo {                               \
-            .file_name     = yo_source_file_name(),     \
-            .function_name = yo_source_function_name(), \
-            .line          = yo_source_line_number(),   \
-            .level         = log_level,                 \
-        }
 #    define yo_log_fatal(msg)            yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_FATAL), msg)
 #    define yo_log_error(msg)            yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_ERROR), msg)
 #    define yo_log_warning(msg)          yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_WARNING), msg)
@@ -92,6 +85,13 @@ struct yo_api yo_LogInfo {
     yo_LogLevel level;
 };
 yo_type_alias(yo_LogInfo, struct yo_LogInfo);
+#define yo_impl_make_log_info(log_level)            \
+    (yo_LogInfo) {                                  \
+        .file_name     = yo_source_file_name(),     \
+        .function_name = yo_source_function_name(), \
+        .line          = yo_source_line_number(),   \
+        .level         = log_level,                 \
+    }
 
 /// Log a message to the standard error stream.
 yo_api void yo_impl_log_msg(yo_LogInfo info, cstring msg);

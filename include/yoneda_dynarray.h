@@ -41,7 +41,7 @@ yo_type_alias(yo_DynArrayHeader, struct yo_DynArrayHeader);
 // @TODO: Continue
 
 yo_api yo_inline u8* yo_make_dynarray_bytes(yo_Arena* arena, usize capacity_bytes) {
-    u8* memory = yo_arena_alloc(arena, size_bytes + yo_sizeof(yo_ArrayHeader));
+    u8* memory = yo_arena_alloc(arena, size_bytes + yo_size_of(yo_ArrayHeader));
     yo_assert_msg(memory != NULL, "Failed to allocate memory.");
 
     yo_DynArrayHeader* header = yo_cast(yo_DynArrayHeader*, memory);
@@ -49,11 +49,11 @@ yo_api yo_inline u8* yo_make_dynarray_bytes(yo_Arena* arena, usize capacity_byte
     header->capacity          = capacity;
     header->count             = size_bytes;
 
-    return memory + yo_sizeof(yo_ArrayHeader);
+    return memory + yo_size_of(yo_ArrayHeader);
 }
 
 #define yo_make_array(arena_ptr, T, count) yo_cast(T*, yo_make_array_bytes(arena_ptr, sizeof(T) * count))
-#define yo_array_count(array_ptr)          ((yo_cast(u8*, array_ptr) - yo_sizeof(yo_ArrayHeader))->count)
+#define yo_array_count(array_ptr)          ((yo_cast(u8*, array_ptr) - yo_size_of(yo_ArrayHeader))->count)
 
 #if defined(YO_LANG_CPP)
 }

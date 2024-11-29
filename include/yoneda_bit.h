@@ -38,7 +38,7 @@ extern "C" {
 // Note: The bit indexing count starts at zero for all macros.
 
 /// Get the number of bits that compose a given type.
-#define yo_type_bit_count(T) (CHAR_BIT * yo_sizeof(T))
+#define yo_type_bit_count(T) (CHAR_BIT * yo_size_of(T))
 
 /// Get the number of type T whose n-th bit is set to 1 and all other bits are 0.
 #define yo_bit(T, n) yo_cast(T, 1 << (n))
