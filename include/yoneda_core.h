@@ -291,6 +291,8 @@ extern "C" {
 #    define yo_inline __forceinline
 #elif defined(YO_COMPILER_CLANG) || defined(YO_COMPILER_GCC)
 #    define yo_inline inline __attribute__((always_inline))
+#else
+#    define yo_inline inline
 #endif
 
 /// Hints that the current switch branch should fallthrough the next.
