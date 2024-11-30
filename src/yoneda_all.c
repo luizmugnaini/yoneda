@@ -1,5 +1,5 @@
 ///                             Yoneda library
-/// Copyright (C) 2024 Luiz Gustavo Mugnaini Anselmo
+/// Copyright (C) 2024 - Present, Luiz Gustavo Mugnaini Anselmo
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the “Software”), to deal in
@@ -21,6 +21,7 @@
 ///
 /// Description: Single compilation unit containing the entirety of the Yoneda library. This file
 ///              exists for the single purpose of making it trivial to compile the whole library.
+/// File name: yoneda_all.c
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
 // clang-format off

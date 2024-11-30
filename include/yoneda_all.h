@@ -1,5 +1,5 @@
 ///                             Yoneda library
-/// Copyright (C) 2024 Luiz Gustavo Mugnaini Anselmo
+/// Copyright (C) 2024 - Present, Luiz Gustavo Mugnaini Anselmo
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the “Software”), to deal in
@@ -20,6 +20,7 @@
 /// SOFTWARE.
 ///
 /// Description: Single header containing all other library header files.
+/// File name: yoneda_all.h
 /// Author: Luiz G. Mugnaini A. <luizmuganini@gmail.com>
 
 #ifndef YONEDA_ALL_H

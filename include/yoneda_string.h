@@ -1,5 +1,5 @@
 ///                             Yoneda library
-/// Copyright (C) 2024 Luiz Gustavo Mugnaini Anselmo
+/// Copyright (C) 2024 - Present, Luiz Gustavo Mugnaini Anselmo
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the “Software”), to deal in
@@ -20,6 +20,7 @@
 /// SOFTWARE.
 ///
 /// Description: String related types and utility functions.
+/// File name: yoneda_string.h
 /// Author: Luiz G. Mugnaini A. <luizmugnaini@gmail.com>
 
 #ifndef YONEDA_STRING_H

@@ -1,5 +1,5 @@
 ///                             Yoneda library
-/// Copyright (C) 2024 Luiz Gustavo Mugnaini Anselmo
+/// Copyright (C) 2024 - Present, Luiz Gustavo Mugnaini Anselmo
 ///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy of
 /// this software and associated documentation files (the “Software”), to deal in
@@ -19,8 +19,8 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 /// SOFTWARE.
 ///
-/// Description: Vector types (yes, a matrix is also vector). Just like in linear algebra, they have
-///              a fixed size.
+/// Description: Vector types and their operations.
+/// File name: yoneda_vec.h
 /// Author: Luiz G. Mugnaini A. <luizmugnaini@gmail.com>
 
 #ifndef YONEDA_VEC_H
