@@ -222,7 +222,7 @@ struct yo_api yo_BufferHeader {
     usize element_count;
 };
 yo_type_alias(yo_BufferHeader, struct yo_BufferHeader);
-#define yo_impl_buffer_header(buffer) yo_cast(yo_BufferHeader*, yo_ptr_sub(yo_cast(u8*, buffer), yo_size_of(yo_BufferHeader)))
+yo_BufferHeader* yo_impl_buffer_header(void* buffer);
 
 /// Generic type alias for arrays.
 #define yo_Buffer(T) T*
@@ -232,6 +232,20 @@ yo_type_alias(yo_BufferHeader, struct yo_BufferHeader);
 
 /// Get the element count of the buffer.
 #define yo_buffer_count(buffer) (yo_impl_buffer_header(buffer)->element_count)
+
+//
+// Implementation details.
+//
+
+#if defined(YO_COMPILER_CLANG)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wcast-align"
+#endif
+
+yo_api yo_inline yo_BufferHeader* yo_impl_buffer_header(void* buffer) {
+    yo_assert_not_null(buffer);
+    return yo_cast(yo_BufferHeader*, yo_cast(u8*, buffer) - yo_size_of(yo_BufferHeader));
+}
 
 yo_api yo_inline
 yo_Buffer(u8) yo_impl_make_buffer(yo_Arena* arena, usize element_count, usize element_size, u32 element_alignment) {
@@ -251,6 +265,10 @@ yo_Buffer(u8) yo_impl_make_buffer(yo_Arena* arena, usize element_count, usize el
     return memory;
 }
 
+#if defined(YO_COMPILER_CLANG)
+#    pragma clang diagnostic pop
+#endif
+
 // -----------------------------------------------------------------------------
 // Arrays with runtime-known fixed size capacity and growing count.
 // -----------------------------------------------------------------------------
@@ -260,6 +278,7 @@ struct yo_api yo_ArrayHeader {
     usize element_count;
 };
 yo_type_alias(yo_ArrayHeader, struct yo_ArrayHeader);
+yo_ArrayHeader* yo_impl_array_header(void* array);
 
 /// Generic type alias for arrays.
 #define yo_Array(T) T*
@@ -267,20 +286,17 @@ yo_type_alias(yo_ArrayHeader, struct yo_ArrayHeader);
 /// Create a new array with a given fixed element capacity.
 #define yo_make_array(arena_ptr, T, capacity) yo_cast(T*, yo_impl_make_array(arena_ptr, capacity, yo_cast(usize, yo_size_of(T)), yo_cast(u32, yo_align_of(T))))
 
-// Get a pointer to the array header.
-#define yo_array_header(array) yo_cast(yo_ArrayHeader*, yo_cast(u8*, array) - yo_size_of(yo_ArrayHeader))
-
 /// Get the maximum (fixed) capacity of the array.
-#define yo_array_capacity(array) ((array != NULL) ? yo_array_header(array)->element_capacity : 0)
+#define yo_array_capacity(array) ((array != NULL) ? yo_impl_array_header(array)->element_capacity : 0)
 
 /// Get the current element count of the array.
-#define yo_array_count(array) ((array != NULL) ? yo_array_header(array)->element_count : 0)
+#define yo_array_count(array) ((array != NULL) ? yo_impl_array_header(array)->element_count : 0)
 
 /// Push a new element by value to the end of the array.
-#define yo_array_push(array, element)                             \
-    do {                                                          \
-        yo_impl_array_assert_can_push(array);                     \
-        array[yo_array_header(array)->element_count++] = element; \
+#define yo_array_push(array, element)                                  \
+    do {                                                               \
+        yo_impl_array_assert_can_push(array);                          \
+        array[yo_impl_array_header(array)->element_count++] = element; \
     } while (0)
 
 /// Copy an existing element instance to the end of the array.
@@ -296,8 +312,12 @@ yo_type_alias(yo_ArrayHeader, struct yo_ArrayHeader);
 /// Clear the array storage.
 yo_api yo_inline void yo_array_clear(yo_Array(void) array) {
     yo_assert_not_null(array);
-    yo_array_header(array)->element_count = 0;
+    yo_impl_array_header(array)->element_count = 0;
 }
+
+//
+// Implementation details.
+//
 
 #if YO_ENABLE_BOUNDS_CHECK
 #    define yo_impl_array_assert_can_push(array) 0
@@ -311,6 +331,16 @@ yo_api yo_inline void yo_array_clear(yo_Array(void) array) {
                 yo_var_capacity);                                              \
         } while (0)
 #endif
+
+#if defined(YO_COMPILER_CLANG)
+#    pragma clang diagnostic push
+#    pragma clang diagnostic ignored "-Wcast-align"
+#endif
+
+yo_api yo_inline yo_ArrayHeader* yo_impl_array_header(void* array) {
+    yo_assert_not_null(array);
+    return yo_cast(yo_ArrayHeader*, yo_cast(u8*, array) - yo_size_of(yo_ArrayHeader));
+}
 
 yo_api yo_inline
 yo_Array(u8) yo_impl_make_array(yo_Arena* arena, usize element_capacity, usize element_size, u32 element_alignment) {
@@ -330,6 +360,10 @@ yo_Array(u8) yo_impl_make_array(yo_Arena* arena, usize element_capacity, usize e
 
     return memory;
 }
+
+#if defined(YO_COMPILER_CLANG)
+#    pragma clang diagnostic pop
+#endif
 
 // -----------------------------------------------------------------------------
 // @TODO: Ring buffer, an array of runtime-known fixed-size infinitely pushable.

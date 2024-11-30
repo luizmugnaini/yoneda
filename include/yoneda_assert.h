@@ -32,6 +32,17 @@
 extern "C" {
 #endif
 
+#if (YO_C_VERSION >= 23) || defined(YO_LANG_CPP)
+#    define yo_constexpr_assert(const_expr) static_assert(const_expr)
+#else
+#    include <assert.h>
+#    if defined(_Static_assert)
+#        define yo_constexpr_assert(const_expr) _Static_assert(const_expr)
+#    else
+#        define yo_constexpr_assert(const_expr) assert(const_expr)
+#    endif
+#endif
+
 /// Assertion macros.
 #if YO_ENABLE_ASSERTS
 #    define yo_assert(expr)                                                             \

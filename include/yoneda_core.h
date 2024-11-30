@@ -214,6 +214,18 @@ extern "C" {
 #    define YO_COMPILER_GCC
 #endif
 
+#if __STDC_VERSION__ >= 202311L
+#    define YO_C_VERSION 23
+#elif __STDC_VERSION__ >= 201710L
+#    define YO_C_VERSION 17
+#elif __STDC_VERSION__ >= 201112L
+#    define YO_C_VERSION 11
+#elif __STDC_VERSION__ >= 199901L
+#    define YO_C_VERSION 99
+#else
+#    error "Yoneda doesn't support this version of C"
+#endif
+
 // -----------------------------------------------------------------------------
 // DLL support - importing/exporting function declarations
 // -----------------------------------------------------------------------------
@@ -369,18 +381,18 @@ yo_type_alias(u8, uint8_t);
 yo_type_alias(u16, uint16_t);
 yo_type_alias(u32, uint32_t);
 yo_type_alias(u64, uint64_t);
-yo_type_alias(usize, u64);
 
 /// Signed integer type.
 yo_type_alias(i8, int8_t);
 yo_type_alias(i16, int16_t);
 yo_type_alias(i32, int32_t);
 yo_type_alias(i64, int64_t);
-yo_type_alias(isize, i64);
 
 /// Memory-address types.
-yo_type_alias(uptr, u64);
-yo_type_alias(iptr, i64);
+yo_type_alias(uptr, uintptr_t);
+yo_type_alias(iptr, ptrdiff_t);
+yo_type_alias(usize, size_t);
+yo_type_alias(isize, ptrdiff_t);
 
 /// Floating-point types.
 yo_type_alias(f32, float);
@@ -544,9 +556,12 @@ yo_type_alias(yo_Status, enum yo_Status);
 #    define yo_source_function_name() "<unknown name>"
 #endif
 
-#if defined(YO_COMPILER_CLANG) || defined(YO_COMPILER_GCC) || defined(YO_COMPILER_MSVC)
+#if defined(YO_COMPILER_CLANG) || defined(YO_COMPILER_GCC)
 #    define yo_source_file_name()   __builtin_FILE()
 #    define yo_source_line_number() __builtin_LINE()
+#elif defined(YO_COMPILER_MSVC)
+#    define yo_source_file_name()   __FILE__
+#    define yo_source_line_number() __LINE__
 #else
 #    define yo_source_file_name()   "<unknown file>"
 #    define yo_source_line_number() (0)

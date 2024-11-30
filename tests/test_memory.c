@@ -26,19 +26,19 @@
 #define test_passed() yo_log_info_fmt("Test %s passed.", yo_source_function_name())
 
 yo_internal void core_type_sizes(void) {
-    yo_assert(yo_size_of(u8) == 1);
-    yo_assert(yo_size_of(u16) == 2);
-    yo_assert(yo_size_of(u32) == 4);
-    yo_assert(yo_size_of(u64) == 8);
-    yo_assert(yo_size_of(usize) == 8);
-    yo_assert(yo_size_of(i8) == 1);
-    yo_assert(yo_size_of(i16) == 2);
-    yo_assert(yo_size_of(i32) == 4);
-    yo_assert(yo_size_of(i64) == 8);
-    yo_assert(yo_size_of(f32) == 4);
-    yo_assert(yo_size_of(f64) == 8);
-    yo_assert(yo_size_of(uptr) == 8);
-    yo_assert(yo_size_of(iptr) == 8);
+    yo_constexpr_assert(yo_size_of(u8) == 1);
+    yo_constexpr_assert(yo_size_of(u16) == 2);
+    yo_constexpr_assert(yo_size_of(u32) == 4);
+    yo_constexpr_assert(yo_size_of(u64) == 8);
+    yo_constexpr_assert(yo_size_of(usize) == 8);
+    yo_constexpr_assert(yo_size_of(i8) == 1);
+    yo_constexpr_assert(yo_size_of(i16) == 2);
+    yo_constexpr_assert(yo_size_of(i32) == 4);
+    yo_constexpr_assert(yo_size_of(i64) == 8);
+    yo_constexpr_assert(yo_size_of(f32) == 4);
+    yo_constexpr_assert(yo_size_of(f64) == 8);
+    yo_constexpr_assert(yo_size_of(uptr) == 8);
+    yo_constexpr_assert(yo_size_of(iptr) == 8);
     test_passed();
 }
 
@@ -53,13 +53,13 @@ yo_internal void offset_check(void) {
         u8    g;      // offset 88.
     };
 
-    yo_assert(yo_offset_of(struct foo, a) == 0);
-    yo_assert(yo_offset_of(struct foo, b) == 64);
-    yo_assert(yo_offset_of(struct foo, c) == 68);
-    yo_assert(yo_offset_of(struct foo, d) == 72);
-    yo_assert(yo_offset_of(struct foo, e) == 76);
-    yo_assert(yo_offset_of(struct foo, f) == 80);
-    yo_assert(yo_offset_of(struct foo, g) == 88);
+    yo_constexpr_assert(yo_offset_of(struct foo, a) == 0);
+    yo_constexpr_assert(yo_offset_of(struct foo, b) == 64);
+    yo_constexpr_assert(yo_offset_of(struct foo, c) == 68);
+    yo_constexpr_assert(yo_offset_of(struct foo, d) == 72);
+    yo_constexpr_assert(yo_offset_of(struct foo, e) == 76);
+    yo_constexpr_assert(yo_offset_of(struct foo, f) == 80);
+    yo_constexpr_assert(yo_offset_of(struct foo, g) == 88);
     test_passed();
 }
 
