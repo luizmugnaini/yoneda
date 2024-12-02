@@ -479,7 +479,7 @@ yo_type_alias(yo_Status, enum yo_Status);
 #endif
 
 /// Check if two pointers refer to the same address in memory.
-#define yo_ptr_same_addr(lhs_ptr, rhs_ptr) (yo_cast(uptr, yo_cast(u8*, lhs_ptr)) == yo_cast(uptr, yo_cast(u8*, rhs_ptr)))
+#define yo_ptr_same_addr(lhs_ptr, rhs_ptr) (yo_cast(uptr, yo_cast(u8 const*, lhs_ptr)) == yo_cast(uptr, yo_cast(u8 const*, rhs_ptr)))
 
 /// Compute the offset, in bytes, between two pointers.
 #define yo_ptr_offset_bytes(end_ptr, start_ptr) \
