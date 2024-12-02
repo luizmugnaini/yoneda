@@ -46,8 +46,8 @@ extern "C" {
 #    define yo_log_warning_fmt(fmt, ...) yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_WARNING), fmt, __VA_ARGS__)
 #    define yo_log_info_fmt(fmt, ...)    yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_INFO), fmt, __VA_ARGS__)
 #    if defined(YO_DEBUG)
-#        define yo_log_debug(msg)          yo_impl_log_msg(yo_impl_make_log_info(yo_LOG_LEVEL_DEBUG), msg)
-#        define yo_log_debug_fmt(fmt, ...) yo_impl_log_fmt(yo_impl_make_log_info(yo_LOG_LEVEL_DEBUG), fmt, __VA_ARGS__)
+#        define yo_log_debug(msg)          yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_DEBUG), msg)
+#        define yo_log_debug_fmt(fmt, ...) yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_DEBUG), fmt, __VA_ARGS__)
 #    else
 #        define yo_log_debug(msg)          0
 #        define yo_log_debug_fmt(fmt, ...) 0
