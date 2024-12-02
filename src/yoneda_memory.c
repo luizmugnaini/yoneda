@@ -115,7 +115,7 @@ void yo_memory_set(u8* memory, usize size_bytes, i32 fill) {
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(memory != NULL);
+    yo_assert_not_null(memory);
 
     yo_discard_value(memset(memory, fill, size_bytes));
 }
@@ -124,8 +124,8 @@ void yo_memory_copy(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_b
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(dst != NULL);
-    yo_assert(src != NULL);
+    yo_assert_not_null(dst);
+    yo_assert_not_null(src);
 
 #if YO_ENABLE_MEMCPY_OVERLAP_CHECK
     yo_assert_msg(
@@ -140,8 +140,8 @@ void yo_memory_move(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_b
     if (yo_unlikely(size_bytes == 0)) {
         return;
     }
-    yo_assert(dst != NULL);
-    yo_assert(src != NULL);
+    yo_assert_not_null(dst);
+    yo_assert_not_null(src);
 
     yo_discard_value(memmove(dst, src, size_bytes));
 }

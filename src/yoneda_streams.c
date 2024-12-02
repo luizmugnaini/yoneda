@@ -61,6 +61,7 @@ yo_inline bool yo_has_read_permission(yo_FileFlag flag) {
            (flag == YO_FILE_FLAG_WRITE_EXTENDED);
 }
 
+// @TODO: improve error handling.
 yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag flag) {
     yo_FileStatus status = YO_FILE_STATUS_NONE;
 
@@ -70,7 +71,7 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
         yo_impl_file_open(file_handle, file_name, YO_IMPL_FILE_FLAG_TO_CSTR[flag]);
 
         if (yo_unlikely(file_handle == NULL)) {
-            status = YO_FILE_STATUS_FAILED_TO_OPEN;
+            status |= YO_FILE_STATUS_FAILED_TO_OPEN;
         }
     }
 
@@ -113,11 +114,11 @@ yo_FileReadResult yo_read_file(yo_Arena* arena, cstring file_name, yo_FileFlag f
         usize read_count = fread(buf, yo_size_of(u8), buf_size, file_handle);
 
         if (yo_unlikely(read_count != buf_size)) {
-            yo_arena_checkpoint_restore(arena_checkpoint);
-
             buf      = NULL;
             buf_size = 0;
             status |= YO_FILE_STATUS_FAILED_TO_READ;
+
+            yo_arena_checkpoint_restore(arena_checkpoint);
         }
     }
 
