@@ -66,6 +66,10 @@ yo_api yo_inline u32 yo_i32_abs_value(i32 value) {
     return yo_cast(u32, (value + mask) ^ mask);
 }
 
+yo_api yo_inline bool yo_i32_have_opposite_signs(i32 lhs, i32 rhs) {
+    return ((lhs ^ rhs) < 0);
+}
+
 #if defined(YO_LANG_CPP)
 }
 #endif
