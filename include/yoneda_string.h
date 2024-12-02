@@ -34,7 +34,7 @@ extern "C" {
 #endif
 
 // -----------------------------------------------------------------------------
-// String utilities.
+// Utilities for zero-terminated C strings.
 // -----------------------------------------------------------------------------
 
 enum yo_StrCmp {
@@ -50,13 +50,42 @@ yo_api usize yo_cstring_length(cstring str);
 yo_api yo_StrCmp yo_cstring_cmp(cstring lhs, cstring rhs);
 yo_api bool      yo_cstring_equal(cstring lhs, cstring rhs);
 
+// -----------------------------------------------------------------------------
+// Character utilities.
+// -----------------------------------------------------------------------------
+
+/// Check if a character is valid UTF-8.
 yo_api yo_inline bool yo_is_utf8(char c) {
     return (0x1F < c && c < 0x7F);
 }
 
-yo_api yo_inline char yo_digit_to_char(u8 digit) {
+/// Check if an integer is a valid digit between 0 and 9.
+yo_api yo_inline bool yo_i32_is_digit(i32 value) {
+    return yo_value_in_range(value, 0, 9);
+}
+
+/// Convert a digit to a character.
+///
+/// NOTE: Won't check if the input is a valid digit between 0 and 9.
+yo_api yo_inline char yo_digit_to_char(i32 digit) {
     yo_assert_msg(digit < 10, "Expected digit to be between 0 and 9.");
     return '0' + yo_cast(char, digit);
+}
+
+/// Check if a given character is a valid numerical digit.
+yo_api yo_inline bool yo_char_is_digit(char c) {
+    return ('0' <= c && c <= '9');
+}
+
+/// Convert a character to a numerical digit.
+///
+/// NOTE: Won't check if the input is a valid digit.
+yo_api yo_inline i32 yo_char_to_digit(char c) {
+    return c - '0';
+}
+
+yo_api yo_inline bool yo_char_is_crlf(char c) {
+    return ((c == '\n') || (c == '\r'));
 }
 
 // -----------------------------------------------------------------------------
