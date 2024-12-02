@@ -202,7 +202,10 @@ yo_inline void yo_arena_checkpoint_restore(yo_ArenaCheckpoint checkpoint) {
 /// with `free_owned_arena`.
 yo_inline yo_Arena yo_make_owned_arena(usize capacity) {
     u8* memory = yo_memory_virtual_alloc(capacity);
-    yo_assert_msg(memory != NULL, "Failed to allocate memory.");
+
+    if (memory == NULL) {
+        capacity = 0;
+    }
 
     return (yo_Arena){.buf = memory, .capacity = capacity};
 }
