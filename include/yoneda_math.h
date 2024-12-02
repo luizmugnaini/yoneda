@@ -60,6 +60,12 @@ yo_api yo_inline u64 yo_u64_no_wrap_sub(u64 a, u64 b) {
     return (c <= a) ? c : 0;
 }
 
+yo_api yo_inline u32 yo_i32_abs_value(i32 value) {
+    i32 mask = value >> (sizeof(i32) * CHAR_BIT - 1);
+
+    return yo_cast(u32, (value + mask) ^ mask);
+}
+
 #if defined(YO_LANG_CPP)
 }
 #endif
