@@ -79,7 +79,7 @@ if options.help.on then
     end
     print(
         "\nExample: Build the library with Clang, run all tests, and directly specify compiler flags:\n"
-            .. "    lua build.lua -clang -test -- -fsanitize=address -DYO_ABORT_AT_MEMORY_ERROR"
+            .. "    lua build.lua -clang -test -- -fsanitize=address -DYO_ENABLE_ABORT_AT_MEMORY_ERROR"
     )
     return
 end
@@ -278,7 +278,7 @@ local yoneda = {
     include_dir = make_path({ root_dir, "include" }),
     dll_build_define = "YO_BUILD_DLL",
     debug_defines = { "YO_DEBUG" },
-    test_defines = { "YO_DEBUG", "YO_ABORT_AT_MEMORY_ERROR" },
+    test_defines = { "YO_DEBUG", "YO_ENABLE_ABORT_AT_MEMORY_ERROR" },
     lib = "yoneda",
     test_exe = "yoneda_tests",
     std = "c11",

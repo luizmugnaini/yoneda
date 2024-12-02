@@ -63,6 +63,9 @@ extern "C" {
 #    ifndef YO_ENABLE_ASSERT_NOT_NULL
 #        define YO_ENABLE_ASSERT_NOT_NULL 0
 #    endif
+#    ifndef YO_ENABLE_ABORT_AT_MEMORY_ERROR
+#        define YO_ENABLE_ABORT_AT_MEMORY_ERROR 0
+#    endif
 #    ifndef YO_ENABLE_SAFE_POINTER_ARITHMETIC
 #        define YO_ENABLE_SAFE_POINTER_ARITHMETIC 0
 #    endif
@@ -81,6 +84,9 @@ extern "C" {
 #    endif
 #    ifndef YO_ENABLE_ASSERT_NOT_NULL
 #        define YO_ENABLE_ASSERT_NOT_NULL 1
+#    endif
+#    ifndef YO_ENABLE_ABORT_AT_MEMORY_ERROR
+#        define YO_ENABLE_ABORT_AT_MEMORY_ERROR 1
 #    endif
 #    ifndef YO_ENABLE_SAFE_POINTER_ARITHMETIC
 #        define YO_ENABLE_SAFE_POINTER_ARITHMETIC 1

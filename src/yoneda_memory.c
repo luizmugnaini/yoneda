@@ -37,12 +37,12 @@
 #    include <sys/mman.h>
 #endif
 
-#if YO_ABORT_AT_MEMORY_ERROR
+#if YO_ENABLE_ABORT_AT_MEMORY_ERROR
 #    include <yoneda_log.h>
-#    define yo_impl_return_from_memory_error()                                        \
-        do {                                                                          \
-            yo_log_fatal("YO_ABORT_AT_MEMORY_ERROR active, aborting the program..."); \
-            yo_abort_program();                                                       \
+#    define yo_impl_return_from_memory_error()                                               \
+        do {                                                                                 \
+            yo_log_fatal("YO_ENABLE_ABORT_AT_MEMORY_ERROR active, aborting the program..."); \
+            yo_abort_program();                                                              \
         } while (0)
 #else
 #    define yo_impl_return_from_memory_error() return NULL
@@ -71,7 +71,7 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
 
 #if defined(YO_OS_WINDOWS)
     memory = yo_cast(u8*, VirtualAlloc(NULL, size_bytes, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE));
-#    if YO_ABORT_AT_MEMORY_ERROR
+#    if YO_ENABLE_ABORT_AT_MEMORY_ERROR
     if (yo_unlikely(memory == NULL)) {
         yo_log_fatal_fmt("OS failed to allocate memory with error code: %lu", GetLastError());
         yo_abort_program();
@@ -81,7 +81,7 @@ u8* yo_memory_virtual_alloc(usize size_bytes) {
     memory = yo_cast(u8*, mmap(NULL, size_bytes, PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_PRIVATE, -1, 0));
     if (yo_likely(yo_cast(void*, memory) != MAP_FAILED)) {
         memory = NULL;
-#    if YO_ABORT_AT_MEMORY_ERROR
+#    if YO_ENABLE_ABORT_AT_MEMORY_ERROR
         yo_log_error_fmt("OS failed to allocate memory due to: %s", strerror(errno));
         yo_abort_program();
 #    endif
