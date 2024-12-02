@@ -169,6 +169,13 @@ yo_api yo_Status yo_join_strings(
     yo_String const* join_strings,
     yo_String        join_element);
 
+// -----------------------------------------------------------------------------
+// String utilities.
+// -----------------------------------------------------------------------------
+
+yo_api bool yo_string_to_i32(yo_String string, i32* result);
+yo_api bool yo_string_to_u32(yo_String string, u32* result);
+
 #if defined(YO_LANG_CPP)
 }
 #endif

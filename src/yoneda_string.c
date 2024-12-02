@@ -146,3 +146,78 @@ yo_Status yo_join_strings(
 
     return YO_STATUS_OK;
 }
+
+yo_internal yo_inline bool yo_impl_string_to_number_start_should_skip(char c) {
+    return ((c == ' ') || (c == '\n') || (c == '\r'));
+}
+
+bool yo_string_to_i32(yo_String string, i32* result) {
+    bool valid_conversion = ((string.length != 0) && (result != NULL));
+
+    char const* string_end  = yo_ptr_add(string.buf, string.length);
+    char const* number_scan = string.buf;
+
+    while ((number_scan < string_end) && yo_impl_string_to_number_start_should_skip(*number_scan)) {
+        ++number_scan;
+    }
+
+    valid_conversion &= (number_scan != string_end);
+
+    i32 sign = 1;
+    if (yo_likely(valid_conversion)) {
+        char maybe_sign_char = *number_scan;
+        if (maybe_sign_char == '-') {
+            sign = -1;
+            ++number_scan;
+        } else if (maybe_sign_char == '+') {
+            ++number_scan;
+        } else if (yo_unlikely(!yo_char_is_digit(maybe_sign_char))) {
+            valid_conversion = false;
+        }
+    }
+
+    usize expected_number_length = yo_cast(usize, yo_ptr_offset_bytes(string_end, number_scan));
+
+    i32 number = 0;
+    for (u32 digit_idx = 0u; valid_conversion && (digit_idx < expected_number_length); ++digit_idx) {
+        char digit = number_scan[digit_idx];
+        valid_conversion &= yo_char_is_digit(digit);
+
+        number = number * 10 + yo_char_to_digit(digit);
+    }
+
+    if (yo_likely(valid_conversion)) {
+        *result = sign * number;
+    }
+
+    return valid_conversion;
+}
+
+bool yo_string_to_u32(yo_String string, u32* result) {
+    bool valid_conversion = ((string.length != 0) && (result != NULL));
+
+    char const* string_end  = yo_ptr_add(string.buf, string.length);
+    char const* number_scan = string.buf;
+
+    while ((number_scan < string_end) && yo_impl_string_to_number_start_should_skip(*number_scan)) {
+        ++number_scan;
+    }
+
+    valid_conversion &= (number_scan != string_end);
+
+    usize expected_number_length = yo_cast(usize, yo_ptr_offset_bytes(string_end, number_scan));
+
+    u32 number = 0u;
+    for (usize digit_idx = 0u; digit_idx < expected_number_length; ++digit_idx) {
+        char digit = number_scan[digit_idx];
+        valid_conversion &= yo_char_is_digit(digit);
+
+        number = number * 10u + yo_cast(u32, yo_char_to_digit(digit));
+    }
+
+    if (yo_likely(valid_conversion)) {
+        *result = number;
+    }
+
+    return valid_conversion;
+}
