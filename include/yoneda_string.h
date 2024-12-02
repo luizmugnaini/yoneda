@@ -94,8 +94,8 @@ yo_api yo_inline bool yo_char_is_crlf(char c) {
 
 /// Immutable string with known length.
 struct yo_api yo_String {
-    cstring buf;
-    usize   length;
+    char const* buf;
+    usize       length;
 };
 yo_type_alias(yo_String, struct yo_String);
 
@@ -110,6 +110,21 @@ yo_type_alias(yo_String, struct yo_String);
 
 yo_api yo_inline yo_String yo_make_string(cstring str) {
     return (yo_String){str, yo_cstring_length(str)};
+}
+
+/// Mutable string buffer with runtime-known fixed length.
+struct yo_api yo_StringBuffer {
+    char* buf;
+    usize length;
+};
+yo_type_alias(yo_StringBuffer, struct yo_StringBuffer);
+
+yo_api yo_inline yo_StringBuffer yo_make_string_buffer(yo_Arena* arena, usize length) {
+    yo_StringBuffer string_buf;
+    string_buf.buf    = yo_arena_alloc(arena, char, length);
+    string_buf.length = (string_buf.buf != NULL) ? length : 0;
+
+    return string_buf;
 }
 
 /// Dynamically sized string.
