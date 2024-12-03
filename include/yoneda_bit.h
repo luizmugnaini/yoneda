@@ -84,7 +84,7 @@ extern "C" {
 
 /// Construct a 16 byte value from a pair of bytes.
 yo_inline u16 yo_u16_from_bytes(u8 high_byte, u8 low_byte) {
-    return ((yo_cast(u16, high_byte) << 8) | yo_cast(u16, low_byte));
+    return yo_cast(u16, (high_byte << 8) | low_byte);
 }
 
 /// Get the high byte of a 16-byte value.
@@ -99,12 +99,12 @@ yo_inline u8 yo_u16_low_byte(u16 value) {
 
 /// Set the value of the high byte of a 16-byte value.
 yo_inline u16 yo_u16_set_high_byte(u16 value, u8 high_byte) {
-    return (yo_cast(u16, high_byte) << 8) | (yo_cast(u16, value) & 0x00FF);
+    return yo_cast(u16, (high_byte << 8) | (value & 0x00FF));
 }
 
 /// Set the value of the low byte of a 16-byte value.
 yo_inline u16 yo_u16_set_low_byte(u16 value, u8 low_byte) {
-    return (value & 0xFF00) | yo_cast(u16, low_byte);
+    return yo_cast(u16, (value & 0xFF00) | low_byte);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,12 +123,12 @@ yo_api yo_inline u8 yo_u8_high_nibble(u8 value) {
 
 /// Make a byte from a pair of nibbles.
 yo_api yo_inline u8 yo_u8_from_nibbles(u8 high_nibble, u8 low_nibble) {
-    return (high_nibble << 4) | low_nibble;
+    return yo_cast(u8, (high_nibble << 4) | low_nibble);
 }
 
 /// Transform a byte into the high byte of a 16-byte value.
 yo_api yo_inline u16 yo_u8_to_u16_high_byte(u8 value) {
-    return yo_cast(u16, value) << 8;
+    return yo_cast(u16, value << 8);
 }
 
 // -----------------------------------------------------------------------------
@@ -141,7 +141,9 @@ yo_api yo_inline u32 yo_i32_abs_value(i32 value) {
 }
 
 /// Check if a given pair of integers has the same sign.
-#define yo_int_opposite_sign(a, b) (((a) ^ (b)) < 0)
+yo_api yo_inline bool yo_i32_opposite_sign(i32 lhs, i32 rhs) {
+    return ((lhs ^ rhs) < 0);
+}
 
 /// Swap the value of two variables without branching.
 #define yo_int_swap(a, b)                                                           \

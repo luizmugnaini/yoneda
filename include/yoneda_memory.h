@@ -26,6 +26,7 @@
 #ifndef YONEDA_MEMORY_H
 #define YONEDA_MEMORY_H
 
+#include <yoneda_assert.h>
 #include <yoneda_core.h>
 
 #if defined(YO_LANG_CPP)
