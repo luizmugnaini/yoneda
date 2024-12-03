@@ -26,7 +26,6 @@
 #ifndef YONEDA_MATH_H
 #define YONEDA_MATH_H
 
-#include <limits.h>
 #include <yoneda_assert.h>
 #include <yoneda_core.h>
 
@@ -58,16 +57,6 @@ yo_api yo_inline u32 yo_u32_no_wrap_sub(u32 a, u32 b) {
 yo_api yo_inline u64 yo_u64_no_wrap_sub(u64 a, u64 b) {
     u64 c = a - b;
     return (c <= a) ? c : 0;
-}
-
-yo_api yo_inline u32 yo_i32_abs_value(i32 value) {
-    i32 mask = value >> (sizeof(i32) * CHAR_BIT - 1);
-
-    return yo_cast(u32, (value + mask) ^ mask);
-}
-
-yo_api yo_inline bool yo_i32_have_opposite_signs(i32 lhs, i32 rhs) {
-    return ((lhs ^ rhs) < 0);
 }
 
 #if defined(YO_LANG_CPP)

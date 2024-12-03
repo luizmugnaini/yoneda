@@ -82,48 +82,63 @@ extern "C" {
 // 16-bit manipulations.
 // -----------------------------------------------------------------------------
 
-/// Construct a word with the pair (high byte, low byte).
-#define yo_u16_from_bytes(hi_u8, lo_u8) ((yo_cast(u16, hi_u8) << 8) | yo_cast(u16, lo_u8))
+/// Construct a 16 byte value from a pair of bytes.
+yo_inline u16 yo_u16_from_bytes(u8 high_byte, u8 low_byte) {
+    return ((yo_cast(u16, high_byte) << 8) | yo_cast(u16, low_byte));
+}
 
-/// Get the value of the high byte of a word.
-#define yo_u16_hi(val_u16) ((val_u16) >> 8)
+/// Get the high byte of a 16-byte value.
+yo_inline u8 yo_u16_high_byte(u16 value) {
+    return yo_cast(u8, value >> 8);
+}
 
-/// Get the value of the low byte of a word.
-#define yo_u16_lo(val_u16) (0x00FF & (val_u16))
+/// Get the low byte of a 16-byte value.
+yo_inline u8 yo_u16_low_byte(u16 value) {
+    return yo_cast(u8, 0x00FF & value);
+}
 
-/// Set the value of the high byte of a word.
-#define yo_u16_set_hi(var_u16, hi_u8)                             \
-    do {                                                          \
-        u16 yo_var_lo_ = (var_u16) & 0x00FF;                      \
-        var_u16        = (yo_cast(u16, hi_u8) << 8) | yo_var_lo_; \
-    } while (0)
+/// Set the value of the high byte of a 16-byte value.
+yo_inline u16 yo_u16_set_high_byte(u16 value, u8 high_byte) {
+    return (yo_cast(u16, high_byte) << 8) | (yo_cast(u16, value) & 0x00FF);
+}
 
-/// Set the value of the low byte of a word.
-#define yo_u16_set_lo(var_u16, lo_u8)                      \
-    do {                                                   \
-        u16 yo_var_hi_ = (var_u16) & 0xFF00;               \
-        var_u16        = yo_var_hi_ | yo_cast(u16, lo_u8); \
-    } while (0)
+/// Set the value of the low byte of a 16-byte value.
+yo_inline u16 yo_u16_set_low_byte(u16 value, u8 low_byte) {
+    return (value & 0xFF00) | yo_cast(u16, low_byte);
+}
 
 // -----------------------------------------------------------------------------
 // Byte manipulations.
 // -----------------------------------------------------------------------------
 
 /// Low nibble of a byte.
-#define yo_u8_lo(val_u8) (0x0F & (val_u8))
+yo_api yo_inline u8 yo_u8_low_nibble(u8 value) {
+    return 0x0F & value;
+}
 
 /// High nibble of a byte.
-#define yo_u8_hi(val_u8) ((val_u8) >> 4)
+yo_api yo_inline u8 yo_u8_high_nibble(u8 value) {
+    return value >> 4;
+}
 
 /// Make a byte from a pair of nibbles.
-#define yo_u8_from_nibbles(hi_nib, lo_nib) yo_cast(u8, ((hi_nib) << 4) | lo_nib)
+yo_api yo_inline u8 yo_u8_from_nibbles(u8 high_nibble, u8 low_nibble) {
+    return (high_nibble << 4) | low_nibble;
+}
 
-/// Transform a byte into the high byte of a word.
-#define yo_u8_to_u16_hi(val_u8) yo_cast(u16, (val_u8) << 8)
+/// Transform a byte into the high byte of a 16-byte value.
+yo_api yo_inline u16 yo_u8_to_u16_high_byte(u8 value) {
+    return yo_cast(u16, value) << 8;
+}
 
 // -----------------------------------------------------------------------------
 // Integer manipulations.
 // -----------------------------------------------------------------------------
+
+yo_api yo_inline u32 yo_i32_abs_value(i32 value) {
+    i32 mask = value >> (sizeof(i32) * CHAR_BIT - 1);
+    return yo_cast(u32, (value + mask) ^ mask);
+}
 
 /// Check if a given pair of integers has the same sign.
 #define yo_int_opposite_sign(a, b) (((a) ^ (b)) < 0)
