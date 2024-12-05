@@ -221,3 +221,24 @@ bool yo_string_to_u32(yo_String string, u32* result) {
 
     return valid_conversion;
 }
+
+yo_StrCmp yo_string_cmp(yo_String lhs, yo_String rhs) {
+    usize length = yo_min_value(lhs.length, rhs.length);
+    i32   cmp    = memcmp(lhs.buf, rhs.buf, length);
+
+    yo_StrCmp result;
+    if (cmp == 0) {
+        result = YO_STR_CMP_EQUAL;
+    } else if (cmp < 0) {
+        result = YO_STR_CMP_LESS_THAN;
+    } else {
+        result = YO_STR_CMP_GREATER_THAN;
+    }
+
+    return result;
+}
+
+bool yo_string_equal(yo_String lhs, yo_String rhs) {
+    usize length = lhs.length;
+    return (length == rhs.length) ? (memcmp(lhs.buf, rhs.buf, length) == 0) : false;
+}

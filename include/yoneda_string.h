@@ -46,7 +46,6 @@ yo_type_alias(yo_StrCmp, enum yo_StrCmp);
 
 yo_api usize yo_cstring_length(cstring str);
 
-// @TODO: Implement for yo_String and yo_DynString.
 yo_api yo_StrCmp yo_cstring_cmp(cstring lhs, cstring rhs);
 yo_api bool      yo_cstring_equal(cstring lhs, cstring rhs);
 
@@ -105,7 +104,7 @@ yo_type_alias(yo_String, struct yo_String);
 #define yo_comptime_make_string(string_literal)   \
     (yo_String) {                                 \
         .buf    = string_literal,                 \
-        .length = yo_size_of(string_literal - 1), \
+        .length = yo_size_of(string_literal) - 1, \
     }
 
 yo_api yo_inline yo_String yo_make_string(cstring str) {
@@ -190,6 +189,9 @@ yo_api yo_Status yo_join_strings(
 
 yo_api bool yo_string_to_i32(yo_String string, i32* result);
 yo_api bool yo_string_to_u32(yo_String string, u32* result);
+
+yo_api yo_StrCmp yo_string_cmp(yo_String lhs, yo_String rhs);
+yo_api bool      yo_string_equal(yo_String lhs, yo_String rhs);
 
 #if defined(YO_LANG_CPP)
 }
