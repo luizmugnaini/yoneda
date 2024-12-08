@@ -263,7 +263,7 @@ local compilers = {
         opt_no_link = "-c",
         opt_out_obj = "-o",
         opt_out_exe = "-o",
-        flags_common = "/INCREMENTAL:NO -TC -EHa- -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-null-pointer-subtraction",
+        flags_common = "/INCREMENTAL:NO -TC -EHa- -Wno-unsafe-buffer-usage -Wno-declaration-after-statement -Wno-null-pointer-subtraction -Wno-pre-c11-compat",
         flags_debug = "-Wall -Wextra -Wconversion -Wuninitialized -Wnull-pointer-arithmetic -Wnull-dereference -Wformat=2 -Ob0 /Od /Oy- /Z7 /RTC1 -g /MTd",
         flags_release = "-O2 /MT",
         ar = "llvm-lib",

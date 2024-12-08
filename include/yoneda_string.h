@@ -107,6 +107,12 @@ yo_type_alias(yo_String, struct yo_String);
         .length = yo_size_of(string_literal) - 1, \
     }
 
+#define yo_comptime_make_string_from_array(char_array) \
+    (yo_String) {                                      \
+        .buf    = char_array,                          \
+        .length = yo_count_of(char_array),             \
+    }
+
 yo_api yo_inline yo_String yo_make_string(cstring str) {
     return (yo_String){str, yo_cstring_length(str)};
 }
