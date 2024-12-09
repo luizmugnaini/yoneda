@@ -100,7 +100,7 @@ u8* yo_arena_realloc_align(
 
     if (yo_unlikely(current_size_bytes > memory_offset)) {
         yo_log_error_fmt(
-            "current_block_size (%zu) surpassthe current offset (%zu) of the arena, which isn't possible",
+            "current_block_size (%zu) surpasses the current offset (%zu) of the arena, which isn't possible",
             current_size_bytes,
             memory_offset);
         yo_impl_return_from_memory_error();
