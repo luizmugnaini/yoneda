@@ -5,6 +5,14 @@ This is a general C library used across my projects. The code is written with th
 principles in mind: simplicity, performance, and minimal memory usage. It's written in C11 and only
 depends on a compatible compiler. Compilers that are ensured to work: Clang, GCC, MSVC.
 
+Is this library for you?
+------------------------
+
+I really don't know. I actively write this library for the benefit of my own projects, not really
+thinking of any user other than myself. I would actually recommend writing your own base library just
+like I'm doing with Yoneda. This library is only open for the purpose of using in other public
+projects and for maybe serving as an inspiration for a follow appreciator of the programming craft.
+
 Integration
 -----------
 
