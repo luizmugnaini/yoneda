@@ -238,6 +238,11 @@ yo_BufferHeader* yo_impl_buffer_header(void* buffer);
 /// Get the element count of the buffer.
 #define yo_buffer_count(buffer) (yo_impl_buffer_header(buffer)->element_count)
 
+/// Iteration helpers.
+#define yo_buffer_for_index(idx, buffer)                for (isize idx = 0, count_ = yo_buffer_count(buffer); idx < count_; ++idx)
+#define yo_buffer_for_each(InnerType, it, buffer)       for (InnerType* it = buffer, it_end_ = buffer + yo_buffer_count(buffer); it < it_end_; ++it)
+#define yo_buffer_for_each_const(InnerType, it, buffer) for (InnerType const *it = buffer, it_end_ = buffer + yo_buffer_count(buffer); it < it_end_; ++it)
+
 //
 // Implementation details.
 //
@@ -315,10 +320,17 @@ yo_ArrayHeader* yo_impl_array_header(void* array);
     } while (0)
 
 /// Clear the array storage.
-yo_api yo_inline void yo_array_clear(yo_Array(void) array) {
-    yo_assert_not_null(array);
-    yo_impl_array_header(array)->element_count = 0;
-}
+#define yo_array_clear(array)                               \
+    do {                                                    \
+        if (array != NULL) {                                \
+            yo_impl_array_header(array)->element_count = 0; \
+        }                                                   \
+    } while (0)
+
+/// Iteration helpers.
+#define yo_array_for_index(idx, array)                  for (isize idx = 0, count_ = yo_array_count(array); idx < count_; ++idx)
+#define yo_buffer_for_each(InnerType, it, buffer)       for (InnerType* it = buffer, it_end_ = buffer + yo_buffer_count(buffer); it < it_end_; ++it)
+#define yo_buffer_for_each_const(InnerType, it, buffer) for (InnerType const *it = buffer, it_end_ = buffer + yo_buffer_count(buffer); it < it_end_; ++it)
 
 //
 // Implementation details.

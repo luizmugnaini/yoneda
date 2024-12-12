@@ -465,6 +465,18 @@ yo_type_alias(yo_Status, enum yo_Status);
 #    define yo_align_as(T) alignas(T)
 #endif
 
+/// Swap the values of two variables.
+#define yo_swap(T, lhs, rhs)       \
+    do {                           \
+        T swap_temp_ = lhs;        \
+        lhs          = rhs;        \
+        rhs          = swap_temp_; \
+    } while (0)
+
+/// Iterating over a range [start, end).
+#define yo_range_for_each(idx, start, end)     for (isize idx = start; idx < end; ++idx)
+#define yo_range_for_each_rev(idx, start, end) for (isize idx = end - 1; idx >= start; --idx)
+
 // -----------------------------------------------------------------------------
 // Pointer operations.
 // -----------------------------------------------------------------------------
@@ -530,8 +542,13 @@ yo_type_alias(yo_Status, enum yo_Status);
 #define yo_stringify(x) #x
 
 /// Concatenate two tokens as a string.
-#define yo_impl_token_concat(x, y)      x##y
 #define yo_token_concat(prefix, suffix) yo_impl_token_concat(prefix, suffix)
+
+//
+// Implementation details
+//
+
+#define yo_impl_token_concat(x, y) x##y
 
 // -----------------------------------------------------------------------------
 // Common memory sizes.

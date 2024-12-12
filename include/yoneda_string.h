@@ -98,6 +98,9 @@ struct yo_api yo_String {
 };
 yo_type_alias(yo_String, struct yo_String);
 
+#define yo_string_for_each(it, string)   for (char const *it = string.buf, it_end_ = yo_ptr_add(string.buf + string.length); it < it_end_; ++it)
+#define yo_string_for_index(idx, string) for (isize idx = 0; idx < string.length; ++idx)
+
 /// Create a string at compile time from a given string literal.
 ///
 /// Note: You should ONLY use these macros with string literals, like "one ring rule them all".
