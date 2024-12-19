@@ -36,7 +36,7 @@ extern "C" {
 #    define YO_MAX_LOG_MESSAGE_LENGTH 8192
 #endif
 
-#if defined(YO_ENABLE_LOGGING)
+#if YO_ENABLE_LOGGING
 #    define yo_log_fatal(msg)            yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_FATAL), msg)
 #    define yo_log_error(msg)            yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_ERROR), msg)
 #    define yo_log_warning(msg)          yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_WARNING), msg)
@@ -45,7 +45,7 @@ extern "C" {
 #    define yo_log_error_fmt(fmt, ...)   yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_ERROR), fmt, __VA_ARGS__)
 #    define yo_log_warning_fmt(fmt, ...) yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_WARNING), fmt, __VA_ARGS__)
 #    define yo_log_info_fmt(fmt, ...)    yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_INFO), fmt, __VA_ARGS__)
-#    if defined(YO_DEBUG)
+#    if YO_DEBUG
 #        define yo_log_debug(msg)          yo_impl_log_msg(yo_impl_make_log_info(YO_LOG_LEVEL_DEBUG), msg)
 #        define yo_log_debug_fmt(fmt, ...) yo_impl_log_fmt(yo_impl_make_log_info(YO_LOG_LEVEL_DEBUG), fmt, __VA_ARGS__)
 #    else
@@ -63,7 +63,7 @@ extern "C" {
 #    define yo_log_warning_fmt(fmt, ...) 0
 #    define yo_log_info_fmt(fmt, ...)    0
 #    define yo_log_debug_fmt(fmt, ...)   0
-#endif
+#endif  // YO_ENABLE_LOGGING
 
 // -----------------------------------------------------------------------------
 // Implementation details.

@@ -57,6 +57,7 @@ extern "C" {
 // -----------------------------------------------------------------------------
 
 #if !defined(YO_DEBUG)
+#    define YO_DEBUG 0
 #    ifndef YO_ENABLE_ASSERTS
 #        define YO_ENABLE_ASSERTS 0
 #    endif
@@ -79,6 +80,8 @@ extern "C" {
 #        define YO_ENABLE_LOGGING 0
 #    endif
 #else  // YO_DEBUG
+#    undef YO_DEBUG
+#    define YO_DEBUG 1
 #    ifndef YO_ENABLE_ASSERTS
 #        define YO_ENABLE_ASSERTS 1
 #    endif
