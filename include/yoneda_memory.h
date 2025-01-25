@@ -40,8 +40,8 @@ extern "C" {
 /// Check whether the current architecture is little-endian or big-endian.
 ///
 /// Note: Unfortunately, these checks can only be reliably made at runtime.
-yo_api bool yo_arch_is_little_endian(void);
-yo_api bool yo_arch_is_big_endian(void);
+yo_proc bool yo_arch_is_little_endian(void);
+yo_proc bool yo_arch_is_big_endian(void);
 
 // -----------------------------------------------------------------------------
 // Memory manipulation utilities.
@@ -53,17 +53,17 @@ yo_api bool yo_arch_is_big_endian(void);
 ///
 /// Directly calls the respective system call for allocating memory. Should be
 /// used for large allocations, if you want small allocations, malloc is the way to go.
-yo_api u8* yo_memory_virtual_alloc(usize size_bytes);
+yo_proc u8* yo_memory_virtual_alloc(usize size_bytes);
 
 /// Release and decommit all memory.
-yo_api void yo_memory_virtual_free(u8* memory, usize size_bytes);
+yo_proc void yo_memory_virtual_free(u8* memory, usize size_bytes);
 
 // TODO: add procedures for reserving/commiting memory separately.
 
 /// Simple wrapper around `memset` that automatically deals with null values.
 ///
 /// Does nothing if `ptr` is a null pointer.
-yo_api void yo_memory_set(u8* memory, usize size_bytes, i32 fill);
+yo_proc void yo_memory_set(u8* memory, usize size_bytes, i32 fill);
 
 #define yo_zero_struct_ptr(struct_ptr) yo_memory_set(struct_ptr, yo_size_of(*struct_ptr), 0)
 
@@ -71,12 +71,12 @@ yo_api void yo_memory_set(u8* memory, usize size_bytes, i32 fill);
 ///
 /// This function will assert that the blocks of memory don't overlap, avoiding undefined
 /// behaviour introduced by `memcpy` in this case.
-yo_api void yo_memory_copy(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_bytes);
+yo_proc void yo_memory_copy(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_bytes);
 
 /// Simple wrapper around `memmove`.
 ///
 /// Does nothing if either `dst` or `src` are null pointers.
-yo_api void yo_memory_move(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_bytes);
+yo_proc void yo_memory_move(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize size_bytes);
 
 // -----------------------------------------------------------------------------
 // Alignment utilities.
@@ -96,7 +96,7 @@ yo_api void yo_memory_move(u8* yo_no_alias dst, u8 const* yo_no_alias src, usize
 ///
 /// Return: The resulting padding with respect to `ptr` that should satisfy the alignment
 ///         requirements, as well as accommodating the associated header.
-yo_api usize yo_padding_with_header(
+yo_proc usize yo_padding_with_header(
     uptr  ptr,
     usize alignment,
     usize header_size,
@@ -112,7 +112,7 @@ yo_api usize yo_padding_with_header(
 ///
 /// Return: The next address, relative to `ptr` that satisfies the alignment requirement imposed
 ///         by `alignment`.
-yo_api usize yo_align_forward(uptr ptr, usize alignment);
+yo_proc usize yo_align_forward(uptr ptr, usize alignment);
 
 // -----------------------------------------------------------------------------
 // Memory arena allocator.
@@ -252,12 +252,12 @@ yo_BufferHeader* yo_impl_buffer_header(void* buffer);
 #    pragma clang diagnostic ignored "-Wcast-align"
 #endif
 
-yo_api yo_inline yo_BufferHeader* yo_impl_buffer_header(void* buffer) {
+yo_proc yo_inline yo_BufferHeader* yo_impl_buffer_header(void* buffer) {
     yo_assert_not_null(buffer);
     return yo_cast(yo_BufferHeader*, yo_cast(u8*, buffer) - yo_size_of(yo_BufferHeader));
 }
 
-yo_api yo_inline
+yo_proc yo_inline
 yo_Buffer(u8) yo_impl_make_buffer(yo_Arena* arena, usize element_count, usize element_size, u32 element_alignment) {
     yo_assert_not_null(arena);
 
@@ -354,12 +354,12 @@ yo_ArrayHeader* yo_impl_array_header(void* array);
 #    pragma clang diagnostic ignored "-Wcast-align"
 #endif
 
-yo_api yo_inline yo_ArrayHeader* yo_impl_array_header(void* array) {
+yo_proc yo_inline yo_ArrayHeader* yo_impl_array_header(void* array) {
     yo_assert_not_null(array);
     return yo_cast(yo_ArrayHeader*, yo_cast(u8*, array) - yo_size_of(yo_ArrayHeader));
 }
 
-yo_api yo_inline
+yo_proc yo_inline
 yo_Array(u8) yo_impl_make_array(yo_Arena* arena, usize element_capacity, usize element_size, u32 element_alignment) {
     yo_assert_not_null(arena);
 

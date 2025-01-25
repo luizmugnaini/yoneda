@@ -109,6 +109,10 @@ extern "C" {
 #    define YO_ENABLE_ANSI_COLORS 0
 #endif
 
+#ifndef YO_ENABLE_STATIC_PROCEDURES
+#    define YO_ENABLE_STATIC_PROCEDURES 0
+#endif
+
 // -----------------------------------------------------------------------------
 // Macros for operating system and compiler detection.
 // -----------------------------------------------------------------------------
@@ -305,6 +309,13 @@ extern "C" {
 // -----------------------------------------------------------------------------
 // Compiler hints.
 // -----------------------------------------------------------------------------
+
+/// Attribute common to all of Yoneda procedures.
+#if YO_ENABLE_STATIC_PROCEDURES
+#    define yo_proc static yo_api
+#else
+#    define yo_proc yo_api
+#endif
 
 /// Hint for function inlining.
 #if defined(YO_COMPILER_MSVC)

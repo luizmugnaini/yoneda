@@ -114,12 +114,12 @@ yo_type_alias(yo_FileReadResult, struct yo_FileReadResult);
 ///     * arena: The arena allocator that will carry the contents of the resulting string.
 ///     * path: A zero-terminated string containing the path to the file to be read.
 ///     * flag: Can be any flag with read permission.
-yo_api yo_FileReadResult yo_read_file(yo_Arena* arena, cstring path, yo_FileFlag flag);
+yo_proc yo_FileReadResult yo_read_file(yo_Arena* arena, cstring path, yo_FileFlag flag);
 
 /// Read the standard input stream bytes to a string.
-yo_api yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk_size);
+yo_proc yo_DynString yo_read_stdin(yo_Arena* arena, u32 initial_buf_size, u32 read_chunk_size);
 
-yo_api yo_DynString yo_absolute_path(yo_Arena* arena, cstring file_path);
+yo_proc yo_DynString yo_absolute_path(yo_Arena* arena, cstring file_path);
 
 #if defined(YO_LANG_CPP)
 }

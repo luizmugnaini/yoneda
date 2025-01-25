@@ -48,14 +48,14 @@ struct yo_api yo_Vec2 {
 yo_type_alias(yo_Vec2, struct yo_Vec2);
 
 /// Check if the components of the vector are inside the floating point zero range.
-yo_api yo_inline bool yo_vec2_is_zero(yo_Vec2 v) {
+yo_proc yo_inline bool yo_vec2_is_zero(yo_Vec2 v) {
     return yo_f32_approx_equal(v.x, 0.0f) && yo_f32_approx_equal(v.y, 0.0f);
 }
 
 /// Get the normalized vector.
 ///
 /// Note: The vector is assumed to be non-zero, otherwise this will result in UB.
-yo_api yo_inline yo_Vec2 yo_vec2_normalized(yo_Vec2 v) {
+yo_proc yo_inline yo_Vec2 yo_vec2_normalized(yo_Vec2 v) {
     f32 len = sqrtf(v.x * v.x + v.y * v.y);
 
     if (yo_unlikely(len < YO_F32_EPSILON)) {
@@ -65,44 +65,44 @@ yo_api yo_inline yo_Vec2 yo_vec2_normalized(yo_Vec2 v) {
     return (yo_Vec2){v.x / len, v.y / len};
 }
 
-yo_api yo_inline f32 yo_vec2_dot(yo_Vec2 lhs, yo_Vec2 rhs) {
+yo_proc yo_inline f32 yo_vec2_dot(yo_Vec2 lhs, yo_Vec2 rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
-yo_api yo_inline bool yo_vec2_is_to_the_left_of(yo_Vec2 lhs, yo_Vec2 rhs) {
+yo_proc yo_inline bool yo_vec2_is_to_the_left_of(yo_Vec2 lhs, yo_Vec2 rhs) {
     return ((rhs.x * lhs.y - rhs.y * lhs.x) >= 0.0f);
 }
 
-yo_api yo_inline void yo_vec2_eq_add(yo_Vec2* lhs, yo_Vec2 rhs) {
+yo_proc yo_inline void yo_vec2_eq_add(yo_Vec2* lhs, yo_Vec2 rhs) {
     lhs->x += rhs.x;
     lhs->y += rhs.y;
 }
-yo_api yo_inline void yo_vec2_eq_sub(yo_Vec2* lhs, yo_Vec2 rhs) {
+yo_proc yo_inline void yo_vec2_eq_sub(yo_Vec2* lhs, yo_Vec2 rhs) {
     lhs->x -= rhs.x;
     lhs->y -= rhs.y;
 }
-yo_api yo_inline void yo_vec2_eq_mul_vec2(yo_Vec2* lhs, yo_Vec2 rhs) {
+yo_proc yo_inline void yo_vec2_eq_mul_vec2(yo_Vec2* lhs, yo_Vec2 rhs) {
     lhs->x *= rhs.x;
     lhs->y *= rhs.y;
 }
-yo_api yo_inline void yo_vec2_eq_mul(yo_Vec2* lhs, f32 scalar) {
+yo_proc yo_inline void yo_vec2_eq_mul(yo_Vec2* lhs, f32 scalar) {
     lhs->x *= scalar;
     lhs->y *= scalar;
 }
 
-yo_api yo_inline yo_Vec2 yo_vec2_add(yo_Vec2 lhs, yo_Vec2 rhs) {
+yo_proc yo_inline yo_Vec2 yo_vec2_add(yo_Vec2 lhs, yo_Vec2 rhs) {
     return (yo_Vec2){lhs.x + rhs.x, lhs.y + rhs.y};
 }
-yo_api yo_inline yo_Vec2 yo_vec2_sub(yo_Vec2 lhs, yo_Vec2 rhs) {
+yo_proc yo_inline yo_Vec2 yo_vec2_sub(yo_Vec2 lhs, yo_Vec2 rhs) {
     return (yo_Vec2){lhs.x - rhs.x, lhs.y - rhs.y};
 }
-yo_api yo_inline yo_Vec2 yo_vec2_mul_vec2(yo_Vec2 lhs, yo_Vec2 rhs) {
+yo_proc yo_inline yo_Vec2 yo_vec2_mul_vec2(yo_Vec2 lhs, yo_Vec2 rhs) {
     return (yo_Vec2){lhs.x * rhs.x, lhs.y * rhs.y};
 }
-yo_api yo_inline yo_Vec2 yo_vec2_mul(yo_Vec2 v, f32 scalar) {
+yo_proc yo_inline yo_Vec2 yo_vec2_mul(yo_Vec2 v, f32 scalar) {
     return (yo_Vec2){v.x * scalar, v.y * scalar};
 }
-yo_api yo_inline yo_Vec2 yo_vec2_neg(yo_Vec2 v) {
+yo_proc yo_inline yo_Vec2 yo_vec2_neg(yo_Vec2 v) {
     return (yo_Vec2){-v.x, -v.y};
 }
 
@@ -115,14 +115,14 @@ struct yo_api yo_Vec3 {
 yo_type_alias(yo_Vec3, struct yo_Vec3);
 
 /// Check if the components of the vector are inside the floating point zero range.
-yo_api yo_inline bool yo_vec3_is_zero(yo_Vec3 v) {
+yo_proc yo_inline bool yo_vec3_is_zero(yo_Vec3 v) {
     return yo_f32_approx_equal(v.x, 0.0f) &&
            yo_f32_approx_equal(v.y, 0.0f) &&
            yo_f32_approx_equal(v.z, 0.0f);
 }
 
 /// Get the normalized vector.
-yo_api yo_inline yo_Vec3 yo_vec3_normalized(yo_Vec3 v) {
+yo_proc yo_inline yo_Vec3 yo_vec3_normalized(yo_Vec3 v) {
     f32 len = sqrtf(v.x * v.x + v.y * v.y + v.z * v.z);
 
     if (yo_unlikely(yo_f32_approx_equal(len, 0.0f))) {
@@ -132,51 +132,51 @@ yo_api yo_inline yo_Vec3 yo_vec3_normalized(yo_Vec3 v) {
     return (yo_Vec3){v.x / len, v.y / len, v.z / len};
 }
 
-yo_api yo_inline f32 yo_vec3_dot(yo_Vec3 lhs, yo_Vec3 rhs) {
+yo_proc yo_inline f32 yo_vec3_dot(yo_Vec3 lhs, yo_Vec3 rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-yo_api yo_inline void yo_vec3_eq_add(yo_Vec3* lhs, yo_Vec3 rhs) {
+yo_proc yo_inline void yo_vec3_eq_add(yo_Vec3* lhs, yo_Vec3 rhs) {
     lhs->x += rhs.x;
     lhs->y += rhs.y;
     lhs->z += rhs.z;
 }
-yo_api yo_inline void yo_vec3_eq_sub(yo_Vec3* lhs, yo_Vec3 rhs) {
+yo_proc yo_inline void yo_vec3_eq_sub(yo_Vec3* lhs, yo_Vec3 rhs) {
     lhs->x -= rhs.x;
     lhs->y -= rhs.y;
     lhs->z -= rhs.z;
 }
-yo_api yo_inline void yo_vec3_eq_mul_vec3(yo_Vec3* lhs, yo_Vec3 rhs) {
+yo_proc yo_inline void yo_vec3_eq_mul_vec3(yo_Vec3* lhs, yo_Vec3 rhs) {
     lhs->x *= rhs.x;
     lhs->y *= rhs.y;
     lhs->z *= rhs.z;
 }
-yo_api yo_inline void yo_vec3_eq_mul(yo_Vec3* lhs, f32 scalar) {
+yo_proc yo_inline void yo_vec3_eq_mul(yo_Vec3* lhs, f32 scalar) {
     lhs->x *= scalar;
     lhs->y *= scalar;
     lhs->z *= scalar;
 }
 
-yo_api yo_inline yo_Vec3 yo_vec3_add(yo_Vec3 lhs, yo_Vec3 rhs) {
+yo_proc yo_inline yo_Vec3 yo_vec3_add(yo_Vec3 lhs, yo_Vec3 rhs) {
     return (yo_Vec3){lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z};
 }
-yo_api yo_inline yo_Vec3 yo_vec3_sub(yo_Vec3 lhs, yo_Vec3 rhs) {
+yo_proc yo_inline yo_Vec3 yo_vec3_sub(yo_Vec3 lhs, yo_Vec3 rhs) {
     return (yo_Vec3){lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z};
 }
-yo_api yo_inline yo_Vec3 yo_vec3_mul_vec3(yo_Vec3 lhs, yo_Vec3 rhs) {
+yo_proc yo_inline yo_Vec3 yo_vec3_mul_vec3(yo_Vec3 lhs, yo_Vec3 rhs) {
     return (yo_Vec3){lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z};
 }
-yo_api yo_inline yo_Vec3 yo_vec3_cross(yo_Vec3 lhs, yo_Vec3 rhs) {
+yo_proc yo_inline yo_Vec3 yo_vec3_cross(yo_Vec3 lhs, yo_Vec3 rhs) {
     return (yo_Vec3){
         lhs.y * rhs.z - lhs.z * rhs.y,
         lhs.z * rhs.x - lhs.x * rhs.z,
         lhs.x * rhs.y - lhs.y * rhs.x,
     };
 }
-yo_api yo_inline yo_Vec3 yo_vec3_mul(yo_Vec3 v, f32 scalar) {
+yo_proc yo_inline yo_Vec3 yo_vec3_mul(yo_Vec3 v, f32 scalar) {
     return (yo_Vec3){v.x * scalar, v.y * scalar, v.z * scalar};
 }
-yo_api yo_inline yo_Vec3 yo_vec3_neg(yo_Vec3 v) {
+yo_proc yo_inline yo_Vec3 yo_vec3_neg(yo_Vec3 v) {
     return (yo_Vec3){-v.x, -v.y, -v.z};
 }
 
@@ -202,12 +202,12 @@ struct yo_api yo_IVec2 {
 yo_type_alias(yo_IVec2, struct yo_IVec2);
 
 /// Check if all components of the vector are zero.
-yo_api yo_inline bool yo_ivec2_is_zero(yo_IVec2 v) {
+yo_proc yo_inline bool yo_ivec2_is_zero(yo_IVec2 v) {
     return (v.x == 0) && (v.y == 0);
 }
 
 /// Get the normalized vector in floating point coordinates.
-yo_api yo_inline yo_Vec2 yo_ivec2_normalized(yo_IVec2 v) {
+yo_proc yo_inline yo_Vec2 yo_ivec2_normalized(yo_IVec2 v) {
     f32 len = sqrtf(yo_cast(f32, v.x * v.x + v.y * v.y));
 
     if (yo_unlikely(len < YO_F32_EPSILON)) {
@@ -217,42 +217,42 @@ yo_api yo_inline yo_Vec2 yo_ivec2_normalized(yo_IVec2 v) {
     return (yo_Vec2){yo_cast(f32, v.x) / len, yo_cast(f32, v.y) / len};
 }
 
-yo_api yo_inline i32 yo_ivec2_dot(yo_IVec2 lhs, yo_IVec2 rhs) {
+yo_proc yo_inline i32 yo_ivec2_dot(yo_IVec2 lhs, yo_IVec2 rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y;
 }
 
-yo_api yo_inline void yo_ivec2_eq_add(yo_IVec2* lhs, yo_IVec2 rhs) {
+yo_proc yo_inline void yo_ivec2_eq_add(yo_IVec2* lhs, yo_IVec2 rhs) {
     lhs->x += rhs.x;
     lhs->y += rhs.y;
 }
-yo_api yo_inline void yo_ivec2_eq_sub(yo_IVec2* lhs, yo_IVec2 rhs) {
+yo_proc yo_inline void yo_ivec2_eq_sub(yo_IVec2* lhs, yo_IVec2 rhs) {
     lhs->x -= rhs.x;
     lhs->y -= rhs.y;
 }
-yo_api yo_inline void yo_ivec2_eq_mul_ivec2(yo_IVec2* lhs, yo_IVec2 rhs) {
+yo_proc yo_inline void yo_ivec2_eq_mul_ivec2(yo_IVec2* lhs, yo_IVec2 rhs) {
     lhs->x *= rhs.x;
     lhs->y *= rhs.y;
 }
-yo_api yo_inline void yo_ivec2_eq_mul(yo_IVec2* lhs, i32 scalar) {
+yo_proc yo_inline void yo_ivec2_eq_mul(yo_IVec2* lhs, i32 scalar) {
     lhs->x *= scalar;
     lhs->y *= scalar;
 }
-yo_api yo_inline yo_IVec2 yo_ivec2_add(yo_IVec2 lhs, yo_IVec2 rhs) {
+yo_proc yo_inline yo_IVec2 yo_ivec2_add(yo_IVec2 lhs, yo_IVec2 rhs) {
     return (yo_IVec2){lhs.x + rhs.x, lhs.y + rhs.y};
 }
-yo_api yo_inline yo_IVec2 yo_ivec2_sub(yo_IVec2 lhs, yo_IVec2 rhs) {
+yo_proc yo_inline yo_IVec2 yo_ivec2_sub(yo_IVec2 lhs, yo_IVec2 rhs) {
     return (yo_IVec2){lhs.x - rhs.x, lhs.y - rhs.y};
 }
-yo_api yo_inline yo_IVec2 yo_ivec2_mul_ivec2(yo_IVec2 lhs, yo_IVec2 rhs) {
+yo_proc yo_inline yo_IVec2 yo_ivec2_mul_ivec2(yo_IVec2 lhs, yo_IVec2 rhs) {
     return (yo_IVec2){lhs.x * rhs.x, lhs.y * rhs.y};
 }
-yo_api yo_inline yo_IVec2 yo_ivec2_mul(yo_IVec2 lhs, i32 scalar) {
+yo_proc yo_inline yo_IVec2 yo_ivec2_mul(yo_IVec2 lhs, i32 scalar) {
     return (yo_IVec2){lhs.x * scalar, lhs.y * scalar};
 }
-yo_api yo_inline yo_IVec2 yo_ivec2_neg(yo_IVec2 v) {
+yo_proc yo_inline yo_IVec2 yo_ivec2_neg(yo_IVec2 v) {
     return (yo_IVec2){-v.x, -v.y};
 }
-yo_api yo_inline bool yo_ivec2_equals(yo_IVec2 lhs, yo_IVec2 rhs) {
+yo_proc yo_inline bool yo_ivec2_equals(yo_IVec2 lhs, yo_IVec2 rhs) {
     return (lhs.x == rhs.x) && (lhs.y == rhs.y);
 }
 
@@ -265,12 +265,12 @@ struct yo_api yo_IVec3 {
 yo_type_alias(yo_IVec3, struct yo_IVec3);
 
 /// Check if all components of the vector are zero.
-yo_api yo_inline bool yo_ivec3_is_zero(yo_IVec3 v) {
+yo_proc yo_inline bool yo_ivec3_is_zero(yo_IVec3 v) {
     return (v.x == 0) && (v.y == 0) & (v.z == 0);
 }
 
 /// Get the normalized vector in floating point coordinates.
-yo_api yo_inline yo_Vec3 yo_ivec3_normalized(yo_IVec3 v) {
+yo_proc yo_inline yo_Vec3 yo_ivec3_normalized(yo_IVec3 v) {
     f32 len = sqrtf(yo_cast(f32, v.x * v.x + v.y * v.y + v.z * v.z));
 
     if (yo_unlikely(len < YO_F32_EPSILON)) {
@@ -280,54 +280,54 @@ yo_api yo_inline yo_Vec3 yo_ivec3_normalized(yo_IVec3 v) {
     return (yo_Vec3){yo_cast(f32, v.x) / len, yo_cast(f32, v.y) / len, yo_cast(f32, v.z) / len};
 }
 
-yo_api yo_inline i32 yo_ivec3_dot(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline i32 yo_ivec3_dot(yo_IVec3 lhs, yo_IVec3 rhs) {
     return lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z;
 }
 
-yo_api yo_inline void yo_ivec3_eq_add(yo_IVec3* lhs, yo_IVec3 rhs) {
+yo_proc yo_inline void yo_ivec3_eq_add(yo_IVec3* lhs, yo_IVec3 rhs) {
     lhs->x += rhs.x;
     lhs->y += rhs.y;
     lhs->z += rhs.y;
 }
-yo_api yo_inline void yo_ivec3_eq_sub(yo_IVec3* lhs, yo_IVec3 rhs) {
+yo_proc yo_inline void yo_ivec3_eq_sub(yo_IVec3* lhs, yo_IVec3 rhs) {
     lhs->x -= rhs.x;
     lhs->y -= rhs.y;
     lhs->z -= rhs.z;
 }
-yo_api yo_inline void yo_ivec3_eq_mul_ivec3(yo_IVec3* lhs, yo_IVec3 rhs) {
+yo_proc yo_inline void yo_ivec3_eq_mul_ivec3(yo_IVec3* lhs, yo_IVec3 rhs) {
     lhs->x *= rhs.x;
     lhs->y *= rhs.y;
     lhs->z *= rhs.z;
 }
-yo_api yo_inline void yo_ivec3_eq_mul(yo_IVec3* lhs, i32 scalar) {
+yo_proc yo_inline void yo_ivec3_eq_mul(yo_IVec3* lhs, i32 scalar) {
     lhs->x *= scalar;
     lhs->y *= scalar;
     lhs->z *= scalar;
 }
 
-yo_api yo_inline yo_IVec3 yo_ivec3_add(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_add(yo_IVec3 lhs, yo_IVec3 rhs) {
     return (yo_IVec3){lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z};
 }
-yo_api yo_inline yo_IVec3 yo_ivec3_sub(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_sub(yo_IVec3 lhs, yo_IVec3 rhs) {
     return (yo_IVec3){lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z};
 }
-yo_api yo_inline yo_IVec3 yo_ivec3_mul_ivec2(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_mul_ivec2(yo_IVec3 lhs, yo_IVec3 rhs) {
     return (yo_IVec3){lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z};
 }
-yo_api yo_inline yo_IVec3 yo_ivec3_cross(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_cross(yo_IVec3 lhs, yo_IVec3 rhs) {
     return (yo_IVec3){
         lhs.y * rhs.z - lhs.z * rhs.y,
         lhs.z * rhs.x - lhs.x * rhs.z,
         lhs.x * rhs.y - lhs.y * rhs.x,
     };
 }
-yo_api yo_inline yo_IVec3 yo_ivec3_mul(yo_IVec3 lhs, i32 scalar) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_mul(yo_IVec3 lhs, i32 scalar) {
     return (yo_IVec3){lhs.x * scalar, lhs.y * scalar, lhs.z * scalar};
 }
-yo_api yo_inline yo_IVec3 yo_ivec3_neg(yo_IVec3 v) {
+yo_proc yo_inline yo_IVec3 yo_ivec3_neg(yo_IVec3 v) {
     return (yo_IVec3){-v.x, -v.y, -v.z};
 }
-yo_api yo_inline bool yo_ivec3_equals(yo_IVec3 lhs, yo_IVec3 rhs) {
+yo_proc yo_inline bool yo_ivec3_equals(yo_IVec3 lhs, yo_IVec3 rhs) {
     return (lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z);
 }
 
@@ -348,7 +348,7 @@ struct yo_api yo_Mat3 {
 yo_type_alias(yo_Mat3, struct yo_Mat3);
 
 /// Get a reference to the matrix component whose row is `r` and column is `c`.
-yo_api yo_inline f32* yo_mat3_at(yo_Mat3* m, u32 r, u32 c) {
+yo_proc yo_inline f32* yo_mat3_at(yo_Mat3* m, u32 r, u32 c) {
     yo_assert_msg(r <= 3, "Row outside range.");
     yo_assert_msg(c <= 3, "Column outside range.");
 
@@ -356,7 +356,7 @@ yo_api yo_inline f32* yo_mat3_at(yo_Mat3* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_Mat3 yo_mat3_id(void) {
+yo_proc yo_inline yo_Mat3 yo_mat3_id(void) {
     // clang-format off
     return (yo_Mat3){
         1.0f, 0.0f, 0.0f,
@@ -367,7 +367,7 @@ yo_api yo_inline yo_Mat3 yo_mat3_id(void) {
 }
 
 /// Create the change of basis transformation for a given triple of basis vectors.
-yo_api yo_inline yo_Mat3 yo_mat3_change_of_basis(yo_Vec3 v1, yo_Vec3 v2, yo_Vec3 v3) {
+yo_proc yo_inline yo_Mat3 yo_mat3_change_of_basis(yo_Vec3 v1, yo_Vec3 v2, yo_Vec3 v3) {
     // @TODO: should we check if v1, v2, v3 form an orthogonal triple?
     // clang-format off
     return (yo_Mat3){
@@ -384,7 +384,7 @@ yo_api yo_inline yo_Mat3 yo_mat3_change_of_basis(yo_Vec3 v1, yo_Vec3 v2, yo_Vec3
 ///     * rot_x: The angle to rotate about the x axis (aka roll angle).
 ///     * rot_y: The angle to rotate about the y axis (aka pitch angle).
 ///     * rot_z: The angle to rotate about the z axis (aka yaw angle).
-yo_api yo_inline yo_Mat3 yo_mat3_rotation_tb(f32 rot_x, f32 rot_y, f32 rot_z) {
+yo_proc yo_inline yo_Mat3 yo_mat3_rotation_tb(f32 rot_x, f32 rot_y, f32 rot_z) {
     f32 xsin = sinf(rot_x);
     f32 ysin = sinf(rot_y);
     f32 zsin = sinf(rot_z);
@@ -410,7 +410,7 @@ struct yo_api yo_ColMat3 {
 yo_type_alias(yo_ColMat3, struct yo_ColMat3);
 
 /// Get a reference to the matrix component whose row is `r` and column is `c`.
-yo_api yo_inline f32* yo_colmat3_at(yo_ColMat3* m, u32 r, u32 c) {
+yo_proc yo_inline f32* yo_colmat3_at(yo_ColMat3* m, u32 r, u32 c) {
     yo_assert_msg(r <= 3, "Row outside range.");
     yo_assert_msg(c <= 3, "Column outside range.");
 
@@ -418,7 +418,7 @@ yo_api yo_inline f32* yo_colmat3_at(yo_ColMat3* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_ColMat3 yo_colmat3_id(void) {
+yo_proc yo_inline yo_ColMat3 yo_colmat3_id(void) {
     // clang-format off
     return (yo_ColMat3){
         1.0f, 0.0f, 0.0f,
@@ -434,7 +434,7 @@ struct yo_api yo_ColMat4 {
 yo_type_alias(yo_ColMat4, struct yo_ColMat4);
 
 /// Get the matrix component whose row is `r` and column is `c`.
-yo_api yo_inline f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
+yo_proc yo_inline f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
     yo_assert_msg(r <= 4, "Row outside range.");
     yo_assert_msg(c <= 4, "Column outside range.");
 
@@ -442,7 +442,7 @@ yo_api yo_inline f32* yo_colmat4_at(yo_ColMat4* m, u32 r, u32 c) {
 }
 
 /// Create an identity matrix.
-yo_api yo_inline yo_ColMat4 yo_colmat4_id(void) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_id(void) {
     // clang-format off
     return (yo_ColMat4){
         1.0f, 0.0f, 0.0f, 0.0f,
@@ -454,7 +454,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_id(void) {
 }
 
 /// Create a scaling matrix for 3D space.
-yo_api yo_inline yo_ColMat4 yo_colmat4_scale(yo_Vec3 scaling) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_scale(yo_Vec3 scaling) {
     // clang-format off
     return (yo_ColMat4){
         scaling.x,    0.0f,      0.0f,   0.0f,
@@ -466,7 +466,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_scale(yo_Vec3 scaling) {
 }
 
 /// Create the translation matrix for a given displacement in 3D space.
-yo_api yo_inline yo_ColMat4 yo_colmat4_translation(yo_Vec3 dx_dy_dz) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_translation(yo_Vec3 dx_dy_dz) {
     // clang-format off
     return (yo_ColMat4){
            1.0f,       0.0f,       0.0f,    0.0f,
@@ -485,7 +485,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_translation(yo_Vec3 dx_dy_dz) {
 ///     * target: The direction to look at.
 ///     * view_up: Orientational vector with the up direction of the camera coordinate
 ///                system.
-yo_api yo_inline yo_ColMat4 yo_colmat4_view_direction_rh(yo_Vec3 eye, yo_Vec3 view_direction, yo_Vec3 view_up) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_view_direction_rh(yo_Vec3 eye, yo_Vec3 view_direction, yo_Vec3 view_up) {
     yo_Vec3 forward = yo_vec3_normalized(view_direction);
     yo_Vec3 right   = yo_vec3_normalized(yo_vec3_cross(forward, view_up));
     yo_Vec3 up      = yo_vec3_cross(right, forward);
@@ -508,7 +508,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_view_direction_rh(yo_Vec3 eye, yo_Vec3 vi
 ///     * target: The target that the camera should look at.
 ///     * view_up: Orientational vector with the up direction of the camera coordinate
 ///                system.
-yo_api yo_inline yo_ColMat4 yo_colmat4_look_at_rh(yo_Vec3 eye, yo_Vec3 target, yo_Vec3 view_up) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_look_at_rh(yo_Vec3 eye, yo_Vec3 target, yo_Vec3 view_up) {
     return yo_colmat4_view_direction_rh(eye, yo_vec3_sub(target, eye), view_up);
 }
 
@@ -520,7 +520,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_look_at_rh(yo_Vec3 eye, yo_Vec3 target, y
 ///     * The z coordinates go from 0 to 1 (forward to back direction) distinct from OpenGL convention.
 /// This transformation is suited for programs working with Vulkan, which assumes the exact
 /// constraints seen above.
-yo_api yo_inline yo_ColMat4
+yo_proc yo_inline yo_ColMat4
 yo_colmat4_perspective_projection_rhzo(f32 fovy, f32 aspect, f32 near_plane, f32 far_plane) {
     f32 tan_hfovy = tanf(fovy * 0.5f);
 
@@ -542,7 +542,7 @@ yo_colmat4_perspective_projection_rhzo(f32 fovy, f32 aspect, f32 near_plane, f32
 ///     * The z coordinates go from 0 to 1 (forward to back direction) distinct from OpenGL convention.
 /// This transformation is suited for programs working with Vulkan, which assumes the exact
 /// constraints seen above.
-yo_api yo_inline yo_ColMat4 yo_colmat4_orthographic_projection_rhzo(
+yo_proc yo_inline yo_ColMat4 yo_colmat4_orthographic_projection_rhzo(
     f32 left,
     f32 right,
     f32 bottom,
@@ -565,7 +565,7 @@ yo_api yo_inline yo_ColMat4 yo_colmat4_orthographic_projection_rhzo(
 // - Should we really copy yo_ColMat??
 
 /// Left-multiply a 2D vector by a 2D square matrix.
-yo_api yo_inline yo_Vec2 yo_mat2_mul_vec2(yo_Mat2 m, yo_Vec2 v) {
+yo_proc yo_inline yo_Vec2 yo_mat2_mul_vec2(yo_Mat2 m, yo_Vec2 v) {
     return (yo_Vec2){
         (m.buf[0] * v.x) + (m.buf[1] * v.y),
         (m.buf[2] * v.x) + (m.buf[3] * v.y),
@@ -573,7 +573,7 @@ yo_api yo_inline yo_Vec2 yo_mat2_mul_vec2(yo_Mat2 m, yo_Vec2 v) {
 }
 
 /// Left-multiply a 3D vector by a 3D square matrix.
-yo_api yo_inline yo_Vec3 yo_mat3_mul_vec3(yo_Mat3 m, yo_Vec3 v) {
+yo_proc yo_inline yo_Vec3 yo_mat3_mul_vec3(yo_Mat3 m, yo_Vec3 v) {
     return (yo_Vec3){
         (m.buf[0] * v.x) + (m.buf[1] * v.y) + (m.buf[2] * v.z),
         (m.buf[3] * v.x) + (m.buf[4] * v.y) + (m.buf[5] * v.z),
@@ -582,7 +582,7 @@ yo_api yo_inline yo_Vec3 yo_mat3_mul_vec3(yo_Mat3 m, yo_Vec3 v) {
 }
 
 /// Multiply a pair of 3D square matrices.
-yo_api yo_inline yo_Mat3 yo_mat3_mul_mat3(yo_Mat3 lhs, yo_Mat3 rhs) {
+yo_proc yo_inline yo_Mat3 yo_mat3_mul_mat3(yo_Mat3 lhs, yo_Mat3 rhs) {
     return (yo_Mat3){
         // Row 1.
         (lhs.buf[0] * rhs.buf[0]) + (lhs.buf[1] * rhs.buf[3]) + (lhs.buf[2] * rhs.buf[6]),
@@ -600,7 +600,7 @@ yo_api yo_inline yo_Mat3 yo_mat3_mul_mat3(yo_Mat3 lhs, yo_Mat3 rhs) {
 }
 
 /// Left-multiply a 4D vector by a 4D square column-major matrix.
-yo_api yo_inline yo_Vec4 yo_colmat4_mul_vec4(yo_ColMat4 m, yo_Vec4 v) {
+yo_proc yo_inline yo_Vec4 yo_colmat4_mul_vec4(yo_ColMat4 m, yo_Vec4 v) {
     return (yo_Vec4){
         (m.buf[0] * v.x) + (m.buf[4] * v.y) + (m.buf[8] * v.z) + (m.buf[12] * v.w),
         (m.buf[1] * v.x) + (m.buf[5] * v.y) + (m.buf[9] * v.z) + (m.buf[13] * v.w),
@@ -610,7 +610,7 @@ yo_api yo_inline yo_Vec4 yo_colmat4_mul_vec4(yo_ColMat4 m, yo_Vec4 v) {
 }
 
 /// Multiply a pair of 4D square column-major matrices.
-yo_api yo_inline yo_ColMat4 yo_colmat4_mul_colmat4(yo_ColMat4 lhs, yo_ColMat4 rhs) {
+yo_proc yo_inline yo_ColMat4 yo_colmat4_mul_colmat4(yo_ColMat4 lhs, yo_ColMat4 rhs) {
     // clang-format off
     return (yo_ColMat4){
         // Row 1.

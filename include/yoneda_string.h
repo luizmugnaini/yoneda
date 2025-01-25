@@ -44,46 +44,46 @@ enum yo_StrCmp {
 };
 yo_type_alias(yo_StrCmp, enum yo_StrCmp);
 
-yo_api usize yo_cstring_length(cstring str);
+yo_proc usize yo_cstring_length(cstring str);
 
-yo_api yo_StrCmp yo_cstring_cmp(cstring lhs, cstring rhs);
-yo_api bool      yo_cstring_equal(cstring lhs, cstring rhs);
+yo_proc yo_StrCmp yo_cstring_cmp(cstring lhs, cstring rhs);
+yo_proc bool      yo_cstring_equal(cstring lhs, cstring rhs);
 
 // -----------------------------------------------------------------------------
 // Character utilities.
 // -----------------------------------------------------------------------------
 
 /// Check if a character is valid UTF-8.
-yo_api yo_inline bool yo_is_utf8(char c) {
+yo_proc yo_inline bool yo_is_utf8(char c) {
     return (0x1F < c && c < 0x7F);
 }
 
 /// Check if an integer is a valid digit between 0 and 9.
-yo_api yo_inline bool yo_i32_is_digit(i32 value) {
+yo_proc yo_inline bool yo_i32_is_digit(i32 value) {
     return yo_value_in_range(value, 0, 9);
 }
 
 /// Convert a digit to a character.
 ///
 /// NOTE: Won't check if the input is a valid digit between 0 and 9.
-yo_api yo_inline char yo_digit_to_char(i32 digit) {
+yo_proc yo_inline char yo_digit_to_char(i32 digit) {
     yo_assert_msg(digit < 10, "Expected digit to be between 0 and 9.");
     return '0' + yo_cast(char, digit);
 }
 
 /// Check if a given character is a valid numerical digit.
-yo_api yo_inline bool yo_char_is_digit(char c) {
+yo_proc yo_inline bool yo_char_is_digit(char c) {
     return ('0' <= c && c <= '9');
 }
 
 /// Convert a character to a numerical digit.
 ///
 /// NOTE: Won't check if the input is a valid digit.
-yo_api yo_inline i32 yo_char_to_digit(char c) {
+yo_proc yo_inline i32 yo_char_to_digit(char c) {
     return c - '0';
 }
 
-yo_api yo_inline bool yo_char_is_crlf(char c) {
+yo_proc yo_inline bool yo_char_is_crlf(char c) {
     return ((c == '\n') || (c == '\r'));
 }
 
@@ -116,7 +116,7 @@ yo_type_alias(yo_String, struct yo_String);
         .length = yo_count_of(char_array),             \
     }
 
-yo_api yo_inline yo_String yo_make_string(cstring str) {
+yo_proc yo_inline yo_String yo_make_string(cstring str) {
     return (yo_String){str, yo_cstring_length(str)};
 }
 
@@ -127,7 +127,7 @@ struct yo_api yo_StringBuffer {
 };
 yo_type_alias(yo_StringBuffer, struct yo_StringBuffer);
 
-yo_api yo_inline yo_StringBuffer yo_make_string_buffer(yo_Arena* arena, usize length) {
+yo_proc yo_inline yo_StringBuffer yo_make_string_buffer(yo_Arena* arena, usize length) {
     yo_StringBuffer string_buf;
     string_buf.buf    = yo_arena_alloc(arena, char, length);
     string_buf.length = (string_buf.buf != NULL) ? length : 0;
@@ -144,7 +144,7 @@ struct yo_api yo_DynString {
 };
 yo_type_alias(yo_DynString, struct yo_DynString);
 
-yo_api yo_inline yo_DynString yo_make_dynstring(yo_Arena* arena, usize capacity) {
+yo_proc yo_inline yo_DynString yo_make_dynstring(yo_Arena* arena, usize capacity) {
     char* memory = yo_arena_alloc(arena, char, capacity);
     yo_assert_msg(memory != NULL, "Failed to allocate memory.");
 
@@ -156,7 +156,7 @@ yo_api yo_inline yo_DynString yo_make_dynstring(yo_Arena* arena, usize capacity)
     };
 }
 
-yo_api yo_inline void yo_init_dynstring(yo_DynString* string, yo_Arena* arena, usize capacity) {
+yo_proc yo_inline void yo_init_dynstring(yo_DynString* string, yo_Arena* arena, usize capacity) {
     char* memory = yo_arena_alloc(arena, char, capacity);
     yo_assert_msg(memory != NULL, "Failed to allocate memory.");
 
@@ -166,7 +166,7 @@ yo_api yo_inline void yo_init_dynstring(yo_DynString* string, yo_Arena* arena, u
     string->arena    = arena;
 }
 
-yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_String string) {
+yo_proc yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_String string) {
     yo_DynString dstring = yo_make_dynstring(arena, string.length + 1);
 
     yo_memory_copy(yo_cast(u8*, dstring.buf), yo_cast(u8 const*, string.buf), yo_size_of(char) * string.length);
@@ -175,18 +175,18 @@ yo_api yo_inline yo_DynString yo_make_dynstring_from_string(yo_Arena* arena, yo_
     return dstring;
 }
 
-yo_api yo_inline yo_String yo_make_string_from_dynstring(yo_DynString const* dstring) {
+yo_proc yo_inline yo_String yo_make_string_from_dynstring(yo_DynString const* dstring) {
     return (yo_String){
         .buf    = dstring->buf,
         .length = dstring->length,
     };
 }
 
-yo_api yo_Status yo_dynstring_resize(yo_DynString* dstring, usize new_capacity);
+yo_proc yo_Status yo_dynstring_resize(yo_DynString* dstring, usize new_capacity);
 
 /// Join an array of string views to a target string data. You can also provide a join element to be
 /// attached to the end of each join.
-yo_api yo_Status yo_join_strings(
+yo_proc yo_Status yo_join_strings(
     yo_DynString*    target,
     usize            join_strings_count,
     yo_String const* join_strings,
@@ -196,11 +196,11 @@ yo_api yo_Status yo_join_strings(
 // String utilities.
 // -----------------------------------------------------------------------------
 
-yo_api bool yo_string_to_i32(yo_String string, i32* result);
-yo_api bool yo_string_to_u32(yo_String string, u32* result);
+yo_proc bool yo_string_to_i32(yo_String string, i32* result);
+yo_proc bool yo_string_to_u32(yo_String string, u32* result);
 
-yo_api yo_StrCmp yo_string_cmp(yo_String lhs, yo_String rhs);
-yo_api bool      yo_string_equal(yo_String lhs, yo_String rhs);
+yo_proc yo_StrCmp yo_string_cmp(yo_String lhs, yo_String rhs);
+yo_proc bool      yo_string_equal(yo_String lhs, yo_String rhs);
 
 #if defined(YO_LANG_CPP)
 }

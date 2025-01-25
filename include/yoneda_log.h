@@ -95,10 +95,10 @@ yo_type_alias(yo_LogInfo, struct yo_LogInfo);
     }
 
 /// Log a message to the standard error stream.
-yo_api void yo_impl_log_msg(yo_LogInfo info, cstring msg);
+yo_proc void yo_impl_log_msg(yo_LogInfo info, cstring msg);
 
 /// Log a formatted message to the standard error stream.
-yo_api yo_attr_fmt(2) void yo_impl_log_fmt(yo_LogInfo info, cstring fmt, ...);
+yo_proc yo_attr_fmt(2) void yo_impl_log_fmt(yo_LogInfo info, cstring fmt, ...);
 
 #if defined(YO_LANG_CPP)
 }
