@@ -1,7 +1,7 @@
 Yoneda Library
 ==============
 
-This is a general C library used across my projects. The code is written with the following
+This is a core C11+ library used across my projects. The code is written with the following
 principles in mind: simplicity, performance, and minimal memory usage. It's written in C11 and only
 depends on a compatible compiler. Compilers that are ensured to work: Clang, GCC, MSVC.
 

@@ -230,10 +230,8 @@ extern "C" {
 #    define YO_C_VERSION 17
 #elif __STDC_VERSION__ >= 201112L
 #    define YO_C_VERSION 11
-#elif __STDC_VERSION__ >= 199901L
-#    define YO_C_VERSION 99
 #else
-#    error "Yoneda doesn't support this version of C"
+#    error "Yoneda requires you to compile for C11 or later"
 #endif
 
 // -----------------------------------------------------------------------------
