@@ -31,7 +31,7 @@
 #include <stdint.h>   // Size-specific integral arithmetic types.
 
 // -----------------------------------------------------------------------------
-// - Macros for C++ compliance -
+// Macros for C++ compliance
 // -----------------------------------------------------------------------------
 
 #if defined(__cplusplus)
