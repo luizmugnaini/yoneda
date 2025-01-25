@@ -454,7 +454,11 @@ yo_type_alias(yo_Status, enum yo_Status);
 
 /// The alignment in bytes, required by a given type.
 #if defined(YO_LANG_C)
-#    define yo_align_of(T) _Alignof(T)
+#    if YO_C_VERSION >= 23
+#        define yo_align_of(T) alignof(T)
+#    else
+#        define yo_align_of(T) _Alignof(T)
+#    endif
 #else
 #    define yo_align_of(T) alignof(T)
 #endif
