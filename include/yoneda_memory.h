@@ -214,7 +214,7 @@ yo_inline yo_Arena yo_make_owned_arena(usize capacity) {
 /// Free the memory of an arena that owns its memory.
 ///
 /// This function should only be called for arenas that where created by `make_owned_arena`.
-yo_inline void yo_free_owned_arena(yo_Arena* arena) {
+yo_inline void yo_destroy_owned_arena(yo_Arena* arena) {
     yo_memory_virtual_free(arena->buf, arena->capacity);
     arena->capacity = 0;
 }
